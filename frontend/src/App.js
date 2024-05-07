@@ -11,6 +11,8 @@ import ViewDrug from "./pages/ViewDrug.jsx";
 import Setting from "./pages/Setting.jsx";
 // require("dotenv").config();
 
+const x = 123;
+
 // Firebase
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
