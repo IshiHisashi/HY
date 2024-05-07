@@ -71,7 +71,6 @@ function CreateDrug({ setIsAddMedicationOpen }) {
   // Searching__detecting the change in state value 'drugName'
   useEffect(() => {
     if (drugName.length > 2) {
-      console.log(drugName);
       setSearchedDrugs(
         drugsBigData.filter((obj) =>
           Object.values(obj)
@@ -131,6 +130,9 @@ function CreateDrug({ setIsAddMedicationOpen }) {
         );
         const doze2Time = +doze_2.split(":")[0];
         const doze2Date = doze1Date + (doze2Time - doze1Time) * 1000 * 60 * 60;
+        const doze3Time = +doze_3.split(":")[0];
+        const doze3Date = doze2Date + (doze3Time - doze2Time) * 1000 * 60 * 60;
+
         const days = (new Date(endDate) - new Date(startDate)) / 86400000;
         console.log(days, new Date(doze1Date));
         // If frequencyWithinADay<=1
@@ -143,8 +145,8 @@ function CreateDrug({ setIsAddMedicationOpen }) {
             logArr.push(doze1DateFor);
           }
           console.log(logArr);
-        } else {
-          // If frequencyWithinADay<=2
+        } else if (frequencyWithinADay === 2) {
+          // If frequencyWithinADay=2
           for (let i = 0; i <= days; i++) {
             const doze1DateFor = new Date(doze1Date).setDate(
               new Date(doze1Date).getDate() + i
@@ -153,6 +155,20 @@ function CreateDrug({ setIsAddMedicationOpen }) {
               new Date(doze2Date).getDate() + i
             );
             logArr.push(doze1DateFor, doze2DateFor);
+          }
+        } else {
+          // If frequencyWithinADay=3
+          for (let i = 0; i <= days; i++) {
+            const doze1DateFor = new Date(doze1Date).setDate(
+              new Date(doze1Date).getDate() + i
+            );
+            const doze2DateFor = new Date(doze2Date).setDate(
+              new Date(doze2Date).getDate() + i
+            );
+            const doze3DateFor = new Date(doze3Date).setDate(
+              new Date(doze3Date).getDate() + i
+            );
+            logArr.push(doze1DateFor, doze2DateFor, doze3DateFor);
           }
           console.log(logArr);
         }
@@ -293,19 +309,22 @@ function NameRegister({
   setDrugInfoRegistration,
 }) {
   const [isNameOpen, setIsNameOpen] = useState(true);
+  const [isNameSearchOpen, setIsNameSearchOpen] = useState(false);
   const [isNicknameOpen, setIsNicknameOpen] = useState(false);
 
   const handleClickNext = () => {
-    // If data is from db
-    if (searchedDrugId) {
-      setIsNameOpen(false);
-      setIsNicknameOpen(true);
-    }
-    // If data is not from db
-    if (!searchedDrugId) {
-      setIsNameOpen(false);
-      setNameRegistration(false);
-      setDrugInfoRegistration(true);
+    if (drugName.length > 0) {
+      // If data is from db
+      if (searchedDrugId) {
+        setIsNameOpen(false);
+        setIsNicknameOpen(true);
+      }
+      // If data is not from db
+      if (!searchedDrugId) {
+        setIsNameOpen(false);
+        setNameRegistration(false);
+        setDrugInfoRegistration(true);
+      }
     }
   };
 
@@ -335,13 +354,19 @@ function NameRegister({
                 type="text"
                 placeholder="e.g Strawnana"
                 value={drugName}
-                onChange={(e) => setDrugName(e.target.value)}
+                onChange={(e) => {
+                  setDrugName(e.target.value);
+                  setIsNameSearchOpen(true);
+                }}
               />
             </div>
             <div className="search-result">
-              {drugName.length > 2 ? (
+              {drugName.length > 2 && isNameSearchOpen ? (
                 <ul className="border-2 border-primary-700 overflow-auto max-h-[375px] mt-[-5px] z-10">
-                  <li className="text-base text-gray-700 pl-3 py-[15px] hover:text-white hover:bg-primary-700">
+                  <li
+                    className="text-base text-gray-700 pl-3 py-[15px] hover:text-white hover:bg-primary-700"
+                    onClick={() => setIsNameSearchOpen(false)}
+                  >
                     {drugName}
                   </li>
                   {searchedDrugs.map((drug) => {
@@ -353,6 +378,8 @@ function NameRegister({
                         setCompanyName={setCompanyName}
                         setSearchedDrugId={setSearchedDrugId}
                         searchedDrugId={searchedDrugId}
+                        isNameSearchOpen={isNameSearchOpen}
+                        setIsNameSearchOpen={setIsNameSearchOpen}
                       />
                     );
                   })}
@@ -362,7 +389,9 @@ function NameRegister({
               )}
             </div>
             <button
-              className={`mt-10 text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12 
+              className={`mt-10 text-base text-gray-50 font-semibold	 rounded-3xl w-full h-12 ${
+                drugName.length === 0 ? "bg-primary-200" : "bg-primary-700"
+              }
         }`}
               onClick={handleClickNext}
             >
@@ -393,8 +422,10 @@ function NameRegister({
                 className="text-gray-500 border-2 border-gray-400	rounded-md	w-full h-14 pl-3 mt-1.5 focus:outline-none focus:border-primary-700 z-0"
                 type="text"
                 placeholder="e.g Strawnana"
-                value={drugName}
-                onChange={(e) => setNickname(e.target.value)}
+                value={nickname ? nickname : drugName}
+                onChange={(e) => {
+                  setNickname(e.target.value);
+                }}
               />
             </div>
             <div className="search-result"></div>
@@ -832,8 +863,8 @@ function ScheduleRegister({
       setProgress((progress) => progress + 1);
     }
     if (!needEndDay) {
-      //If user answers 'no', set the day 30 yrs later
-      setEndDate("2055/12/31");
+      //If user answers 'no', set the day 3 yrs later
+      setEndDate("2027/12/31");
       // Unmount this component
       setScheduleRegistration(false);
       setReminderRefistration(true);

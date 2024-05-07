@@ -6,11 +6,14 @@ const SearchDrug = ({
   setSearchedDrugId,
   searchedDrugId,
   setCompanyName,
+  isNameSearchOpen,
+  setIsNameSearchOpen,
 }) => {
   const handleSelect = () => {
     setDrugName(drug.brand_name);
     setCompanyName(drug.company_name);
     setSearchedDrugId(drug.drug_code);
+    setIsNameSearchOpen(false);
   };
 
   return (
