@@ -41,13 +41,6 @@ initializeFirebase()
   .catch(console.error);
 
 const firebaseConfig = {
-  // apiKey: "AIzaSyDnPM-sLk8L_M6rZxWkU9LNBlYPtLqgizU",
-  // authDomain: "hy-drug-tracker.firebaseapp.com",
-  // projectId: "hy-drug-tracker",
-  // storageBucket: "hy-drug-tracker.appspot.com",
-  // messagingSenderId: "219645151152",
-  // appId: "1:219645151152:web:121e861e16e8c241ecf875",
-  // measurementId: "G-DWP00DV9NB",
   apiKey: process.env.apiKey,
   authDomain: process.env.authDomain,
   projectId: process.env.projectId,
@@ -87,7 +80,6 @@ app.listen(PORT, () => {
 });
 
 app.use((req, res, next) => {
-  // console.log(req.cookies);
   next();
 });
 
@@ -122,18 +114,20 @@ mongoose
           },
         };
         console.log(payload, `${log.userId._id}`);
-        admin
-          .messaging()
-          .send(payload)
-          .then((res) => {
-            console.log("push sent successfully", res);
-          })
-          .catch((err) => {
-            console.log(err);
-            if (err.errorInfo) {
-              console.log(err.errorInfo);
-            }
-          });
+        if (log.userId.reminder) {
+          admin
+            .messaging()
+            .send(payload)
+            .then((res) => {
+              console.log("push sent successfully", res);
+            })
+            .catch((err) => {
+              console.log(err);
+              if (err.errorInfo) {
+                console.log(err.errorInfo);
+              }
+            });
+        }
       });
   })
   .catch((error) => {

@@ -105,7 +105,8 @@ function Setting() {
 export default Setting;
 
 function Notification({ user, userId }) {
-  const [reminder, setreminder] = useState(user?.reminder);
+  const [reminder, setreminder] = useState(user.reminder);
+
   const handleToggle = () => {
     setreminder(!reminder);
     console.log(userId);

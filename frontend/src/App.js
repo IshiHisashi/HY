@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
@@ -9,6 +9,7 @@ import EditDrug from "./pages/EditDrug.jsx";
 import DetailDrug from "./pages/DetailDrug.jsx";
 import ViewDrug from "./pages/ViewDrug.jsx";
 import Setting from "./pages/Setting.jsx";
+import { useAuthContext } from "./authContext.js";
 // require("dotenv").config();
 
 // Firebase
@@ -18,7 +19,10 @@ import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import SignUp from "./pages/SignUp.jsx";
 
 // Specify userID
-export let userId = "66245b3e7457e717dc5a8294";
+
+export let userId;
+
+console.log(userId);
 
 const firebaseConfig = {
   apiKey: "AIzaSyDnPM-sLk8L_M6rZxWkU9LNBlYPtLqgizU",
@@ -47,6 +51,7 @@ if ("serviceWorker" in navigator) {
     });
 }
 async function save(userId) {
+  console.log(userId);
   const fcm_token = await getToken(messaging, {
     vapidKey:
       "BIGHLUsIKPHRiT7ISIA8DquI6O5bK6xZ4DomZISS3TtmHg_rA7fUDMwfWF17TM8hzSB_ogxYvuwy3wRDo_TnZRA",
@@ -54,7 +59,7 @@ async function save(userId) {
 
   // Receive
   onMessage(messaging, (payload) => {
-    if (payload.data.userId !== userId) {
+    if (payload.data.userId === userId) {
       console.log("Message received. ", payload);
       new Notification(payload.notification.title, {
         body: payload.notification.body,
@@ -69,23 +74,40 @@ export const fcm_token = await getToken(messaging, {
 });
 console.log(fcm_token);
 
-export function requestPermission(userId) {
-  // console.log("Requesting permission...");
-  Notification.requestPermission().then((permission) => {
-    if (permission === "granted") {
-      console.log("Notification permission granted.");
-      // insert fnc
-      save(userId);
-      // insert end
-    }
-  });
-}
-requestPermission();
+// export function requestPermission(userId) {
+//   // console.log("Requesting permission...");
+//   Notification.requestPermission().then((permission) => {
+//     if (permission === "granted") {
+//       console.log("Notification permission granted.");
+//       // insert fnc
+//       save(userId);
+//       // insert end
+//     }
+//   });
+// }
+// requestPermission();
 
 // ----------------------------------------------------
 
 // Routing
 function App() {
+  const userIdObj = useAuthContext();
+  const userId = userIdObj.userId;
+  // const [userId, setUserId] = useState(userIdObj.userId);
+  console.log(userId);
+
+  function requestPermission(userId) {
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        console.log("Notification permission granted.");
+        // insert fnc
+        save(userId);
+        // insert end
+      }
+    });
+  }
+  requestPermission(userId);
+
   return (
     <div>
       {/* <h1 className="text-3xl font-bold underline">Hello from frontend</h1> */}
