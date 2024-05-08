@@ -13,7 +13,7 @@ router.post("/", drugController.createDrug);
 router.get("/", authController.protect, drugController.readDrugs);
 router.get(
   "/shortage",
-  authController.protect,
+  // authController.protect,
   drugController.readShortageDrugs
 );
 router.get("/:id", authController.protect, drugController.readDrug);

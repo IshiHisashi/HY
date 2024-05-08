@@ -97,17 +97,15 @@ export const deleteDrug = async (req, res) => {
 
 export const readShortageDrugs = async (req, res) => {
   try {
-    console.log(req.params.userId);
     let filter = {};
     if (req.params.userId) {
+      // console.log(req.params.userId);
       filter = {
         userId: req.params.userId,
         $expr: { $lt: ["$remaining", "$shortageLimit"] },
       };
     }
-    const shortageDrugs = await drug.find({
-      $expr: { $lt: ["$remaining", "$shortageLimit"] },
-    });
+    const shortageDrugs = await drug.find(filter);
     res.status(201).json({
       status: "success",
       numDrugs: shortageDrugs.length,

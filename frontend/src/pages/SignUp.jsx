@@ -3,10 +3,11 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { fcm_token } from "../App";
 import { useAuthContext } from "../authContext.js";
+import AddDrug from "./AddDrug";
 
 const SignUp = ({ email, password, setSignup }) => {
   const { signup } = useAuthContext();
-
+  const navigate = useNavigate();
   // Auth container
   const [em, setEm] = useState(email);
   const [pw, setPw] = useState(password);
@@ -25,6 +26,9 @@ const SignUp = ({ email, password, setSignup }) => {
   // States for registration Process
   const [progress, setProgress] = useState(1);
   const [reminderRegisater, setReminderRefister] = useState(false);
+
+  // For add modal
+  const [isAddMedicationOpen, setIsAddMedicationOpen] = useState(false);
 
   const handleProgessAdd = () => {
     setProgress((progress) => progress + 1);
@@ -356,10 +360,14 @@ const SignUp = ({ email, password, setSignup }) => {
           </div>
           <button
             className="mt-[183px] text-base text-gray-50 font-semibold rounded-3xl bg-primary-700 w-full h-12"
-            onClick={() => setSignup(false)}
+            onClick={() => {
+              // setSignup(false);
+              setIsAddMedicationOpen(true);
+            }}
           >
-            <Link to="/drugs/create">Add an Medication</Link>
+            Add an Medication
           </button>
+
           <p
             className="mt-[14.5px] text-base text-gray-800 text-center"
             onClick={() => setSignup(false)}
@@ -367,6 +375,24 @@ const SignUp = ({ email, password, setSignup }) => {
             <Link to="/">Skip</Link>
           </p>
         </div>
+      ) : (
+        ""
+      )}
+      {/* Modal for add medication */}
+      {isAddMedicationOpen ? (
+        <>
+          <div
+            className="modal fixed z-10 top-0 left-0 bg-gray-800 opacity-80 w-full h-[100%]"
+            onClick={() => setIsAddMedicationOpen(false)}
+          >
+            {" "}
+            <Link to="/"></Link>
+          </div>
+
+          <div className="px-4 bg-white rounded-t-2xl h-[98vh] overflow-scroll	 w-full fixed bottom-0 z-20">
+            <AddDrug setIsAddMedicationOpen={setIsAddMedicationOpen} />
+          </div>
+        </>
       ) : (
         ""
       )}

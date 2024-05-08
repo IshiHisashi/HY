@@ -30,7 +30,7 @@ function ViewDrug() {
 
   return (
     <>
-      <div className="bg-primary-100 min-h-screen pb-[83px]">
+      <div className="bg-primary-100 min-h-screen pb-[200px] relative">
         <header className="pt-2.5 relative h-[54px] bg-white">
           <h1 className="ont-semibold text-lg text-center font-bold">
             Medication List
@@ -46,6 +46,14 @@ function ViewDrug() {
             <Drug drug={drug} key={drug._id} />
           ))}
         </ul>
+        <div
+          className="btn-add-med fixed top-[420px] right-4 flex w-14 h-14 bg-primary-700 rounded-[1000px] cursor-pointer"
+          onClick={handleShowAddMedication}
+        >
+          <p className="self-center translate-y-[-5%]	 text-white font-semibokd text-[32px] rounded-[1px] mx-auto">
+            +
+          </p>
+        </div>
       </div>
       {/* Modal for add medication */}
       {isAddMedicationOpen ? (
@@ -61,8 +69,8 @@ function ViewDrug() {
       ) : (
         ""
       )}
-      (
-      <Footer />)
+
+      <Footer />
     </>
   );
 }
