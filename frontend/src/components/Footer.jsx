@@ -3,11 +3,9 @@ import { Link } from "react-router-dom";
 
 function Footer() {
   const currentURL = window.location.pathname;
-
-  console.log(currentURL);
   return (
     <>
-      <footer className="absolute bottom-0 bg-white w-full h-[83px] pt-2 px-[42px] flex justify-between">
+      <footer className="fixed bottom-0 bg-white w-full h-[83px] pt-2 px-[42px] flex justify-between">
         <div className="schedule">
           {currentURL === "/" ? (
             <>

@@ -1,0 +1,32 @@
+.scroll {
+  width: 200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* background-color: red; */
+  .scrollable-content {
+    /* background-color: blue; */
+    height: 150px;
+    overflow-y: scroll;
+  }
+  .scrollable-content::-webkit-scrollbar {
+    display: none;
+  }
+  .hours {
+    /* justify-self: end; */
+  }
+  .minutes {
+    /* justify-self: center; */
+  }
+
+  .ampm {
+    align-self: center;
+  }
+
+  .el {
+    cursor: pointer;
+  }
+  .el:hover {
+    background-color: #dcf5f5;
+  }
+}

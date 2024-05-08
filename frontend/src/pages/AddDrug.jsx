@@ -3,6 +3,9 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import SearchDrug from "./SearchDrug.jsx";
 import { useAuthContext } from "../authContext.js";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function CreateDrug({ setIsAddMedicationOpen }) {
   const userIdObj = useAuthContext();
@@ -125,22 +128,33 @@ function CreateDrug({ setIsAddMedicationOpen }) {
         // Then, create Log data
         // set doze hours
         const doze1Time = +doze_1.split(":")[0];
-        const doze1Date = new Date(startDate).setHours(
+        const doze1Minute = +doze_1.split(":")[1];
+        const doze1DateH = new Date(startDate).setHours(
           new Date(startDate).getHours() + doze1Time
         );
+        const doze1DateM = new Date(doze1DateH).setMinutes(doze1Minute);
+
         const doze2Time = +doze_2.split(":")[0];
-        const doze2Date = doze1Date + (doze2Time - doze1Time) * 1000 * 60 * 60;
+        const doze2Minute = +doze_2.split(":")[1];
+        const doze2Date =
+          doze1DateM +
+          (doze2Time - doze1Time) * 1000 * 60 * 60 +
+          (doze2Minute - doze1Minute) * 1000 * 60;
         const doze3Time = +doze_3.split(":")[0];
-        const doze3Date = doze2Date + (doze3Time - doze2Time) * 1000 * 60 * 60;
+        const doze3Minute = +doze_3.split(":")[1];
+        const doze3Date =
+          doze2Date +
+          (doze3Time - doze2Time) * 1000 * 60 * 60 +
+          (doze3Minute - doze2Minute) * 1000 * 60;
 
         const days = (new Date(endDate) - new Date(startDate)) / 86400000;
-        console.log(days, new Date(doze1Date));
+        console.log(days, new Date(doze1DateM));
         // If frequencyWithinADay<=1
         logArr = [];
         if (+frequencyWithinADay <= 1) {
           for (let i = 0; i < days; i = i + Number(frequencyDay)) {
-            const doze1DateFor = new Date(doze1Date).setDate(
-              new Date(doze1Date).getDate() + i
+            const doze1DateFor = new Date(doze1DateM).setDate(
+              new Date(doze1DateM).getDate() + i
             );
             logArr.push(doze1DateFor);
           }
@@ -148,8 +162,8 @@ function CreateDrug({ setIsAddMedicationOpen }) {
         } else if (frequencyWithinADay === 2) {
           // If frequencyWithinADay=2
           for (let i = 0; i <= days; i++) {
-            const doze1DateFor = new Date(doze1Date).setDate(
-              new Date(doze1Date).getDate() + i
+            const doze1DateFor = new Date(doze1DateM).setDate(
+              new Date(doze1DateM).getDate() + i
             );
             const doze2DateFor = new Date(doze2Date).setDate(
               new Date(doze2Date).getDate() + i
@@ -159,8 +173,8 @@ function CreateDrug({ setIsAddMedicationOpen }) {
         } else {
           // If frequencyWithinADay=3
           for (let i = 0; i <= days; i++) {
-            const doze1DateFor = new Date(doze1Date).setDate(
-              new Date(doze1Date).getDate() + i
+            const doze1DateFor = new Date(doze1DateM).setDate(
+              new Date(doze1DateM).getDate() + i
             );
             const doze2DateFor = new Date(doze2Date).setDate(
               new Date(doze2Date).getDate() + i
@@ -332,6 +346,7 @@ function NameRegister({
     setIsNicknameOpen(false);
     setNameRegistration(false);
     setDrugInfoRegistration(true);
+    console.log(nickname);
   };
 
   return (
@@ -987,12 +1002,16 @@ function ScheduleRegister({
             </div>
             {doze1open ? (
               <div id="doze_1" className="form mx-4 mt-[58px]">
-                <p>Will implement later_doze1</p>
+                <p>Will implement later_doze1 Now</p>
                 <input
                   type="text"
                   className="border-2 border-primary-700"
                   onChange={(e) => setDoze_1(e.target.value)}
                 />
+
+                {/* Exp : slicer here */}
+                <Timeslider />
+
                 <div className="next_name mt-[224px]">
                   <button
                     className="mt-10 text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12"
@@ -1379,5 +1398,152 @@ function ReminderRegister({
         )}
       </>
     </>
+  );
+}
+
+function Timeslider() {
+  var settings = {
+    infinite: true,
+    speed: 1000,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    swipeToSlide: true,
+    vertical: true,
+  };
+
+  var settingsampm = {
+    infinite: true,
+    speed: 1000,
+    slidesToShow: 2,
+    slidesToScroll: 1,
+    swipeToSlide: true,
+    vertical: true,
+  };
+
+  const hrs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const minutes = [
+    "00",
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+  ];
+
+  return (
+    <div>
+      {/* <div className="grid grid-cols-[40px_40px_40px]">
+        <Slider {...settings}>
+          {hrs.map((hour) => {
+            return (
+              <div>
+                <h3>{hour}</h3>
+              </div>
+            );
+          })}
+        </Slider>
+        <Slider {...settings}>
+          {minutes.map((minute) => {
+            return (
+              <div className="bg-primary-700">
+                <h3>{minute}</h3>
+              </div>
+            );
+          })}
+        </Slider>
+        <Slider {...settingsampm}>
+          <div>
+            <h3>am</h3>
+          </div>
+          <div>
+            <h3>pm</h3>
+          </div>
+        </Slider>
+      </div> */}
+
+      {/* scroll picker using vanilla css */}
+      <div className="scroll">
+        <div className="scrollable-content hours">
+          {hrs.map((hour) => {
+            return (
+              <div className="el">
+                <h3>{hour}</h3>
+              </div>
+            );
+          })}
+        </div>
+        <div className="scrollable-content minutes">
+          {minutes.map((minute) => {
+            return (
+              <div className="el">
+                <h3>{minute}</h3>
+              </div>
+            );
+          })}
+        </div>
+        <div className="ampm">
+          <div className="el">
+            <h3>am</h3>
+          </div>
+          <div className="el">
+            <h3>pm</h3>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

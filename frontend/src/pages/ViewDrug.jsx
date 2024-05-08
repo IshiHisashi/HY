@@ -5,6 +5,7 @@ import PdfCard from "../PdfCard.js";
 import { useAuthContext } from "../authContext.js";
 import AddDrug from "./AddDrug.jsx";
 import Footer from "../components/Footer.jsx";
+import StatusFlags from "../components/StatusFlags.jsx";
 
 function ViewDrug() {
   const userIdObj = useAuthContext();
@@ -29,7 +30,7 @@ function ViewDrug() {
 
   return (
     <>
-      <div className="bg-primary-100 min-h-screen">
+      <div className="bg-primary-100 min-h-screen pb-[83px]">
         <header className="pt-2.5 relative h-[54px] bg-white">
           <h1 className="ont-semibold text-lg text-center font-bold">
             Medication List
@@ -46,13 +47,11 @@ function ViewDrug() {
           ))}
         </ul>
       </div>
-
       {/* Modal for add medication */}
-
       {isAddMedicationOpen ? (
         <>
           <div
-            className="modal fixed z-10 top-0 left-0 bg-gray-800 opacity-80 w-full h-[120%]"
+            className="modal fixed z-10 top-0 left-0 bg-gray-800 opacity-80 w-full h-[100%]"
             onClick={handleModalClose}
           ></div>
           <div className="px-4 bg-white rounded-t-2xl h-[98vh] overflow-scroll	 w-full fixed bottom-0 z-20">
@@ -60,8 +59,10 @@ function ViewDrug() {
           </div>
         </>
       ) : (
-        <Footer />
+        ""
       )}
+      (
+      <Footer />)
     </>
   );
 }
@@ -70,7 +71,8 @@ function Drug({ drug }) {
   const navigate = useNavigate();
   const frequencyDay = drug.takein.frequencyDay;
   const frequencyWithinADay = drug.takein.frequencyWithinADay;
-
+  const status = drug.status;
+  const typeOfDrug = drug.typeOfDrug;
   function handleClick(drug) {
     navigate(`/drugs/detail/${drug._id}`);
   }
@@ -82,10 +84,10 @@ function Drug({ drug }) {
       >
         {/* <Navigate to={`/drugs/edit/${drug._id}`} /> */}
         <h3 className="text-gray-950 text-[19.98px] font-bold">
-          {drug.drugName} {`: ${drug.status}`}
+          {drug.nickname ? drug.nickname : drug.drugName}
         </h3>
-        <p>nickname</p>
-        <p className="text-[11px] text-gray-500 font-medium">
+        <p className="text-[11px] text-gray-950 mt-1">{drug.drugName}</p>
+        <p className="text-[11px] text-gray-500 font-medium mt-1">
           {drug.amount} {drug.unit} /{" "}
           {frequencyDay === 1
             ? "once"
@@ -101,6 +103,7 @@ function Drug({ drug }) {
             ? `${frequencyWithinADay} days`
             : ""}
         </p>
+        <StatusFlags drug={drug} />
       </div>
     </>
   );

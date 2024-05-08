@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import StatusFlags from "../components/StatusFlags.jsx";
 
 function ShowDrug() {
   const [drug, setDrug] = useState({});
@@ -126,6 +127,7 @@ function ShowDrug() {
   const handleAlertClose = () => {
     setAlertNonSave(false);
   };
+  console.log(drug);
 
   return (
     <div>
@@ -139,50 +141,9 @@ function ShowDrug() {
           </header>
           <div className="mx-4 ">
             <p className="text-[21.36px] text-gray-950 font-semibold">
-              {drug.drugName}
+              {drug.nickname ? drug.nickname : drug.drugName}
             </p>
-            <div className="cards flex gap-2 mt-4">
-              {/* Status */}
-              <p
-                className={`text-[11px] font-medium py-1.5 px-3 rounded-[18px] inline-block ${
-                  status === "taking"
-                    ? "text-primary-700 bg-primary-200"
-                    : status === "stop taking"
-                    ? "text-gray-700 bg-gray-200"
-                    : status === "complete"
-                    ? "text-[#EF6255] bg-[#FEEDEC]"
-                    : ""
-                }`}
-              >
-                {status === "taking"
-                  ? "Taking"
-                  : status === "stop taking"
-                  ? "Stop Taking"
-                  : status === "complete"
-                  ? "Completed"
-                  : ""}
-              </p>
-              {/* Form */}
-              <p
-                className={`text-[11px] font-medium py-1.5 px-3 rounded-[18px] inline-block ${
-                  typeOfDrug === "over-the-counter"
-                    ? "text-[#337B19] bg-[#E9F9E3]"
-                    : typeOfDrug === "prescription"
-                    ? "text-[#3875D6] bg-[#E3ECF9]"
-                    : typeOfDrug === "suppliment"
-                    ? "text-[#B59A0C] bg-[#FFFAE2]"
-                    : ""
-                }`}
-              >
-                {typeOfDrug === "over-the-counter"
-                  ? "OTC"
-                  : typeOfDrug === "prescription"
-                  ? "Prescription"
-                  : typeOfDrug === "suppliment"
-                  ? "Suppliment"
-                  : ""}
-              </p>
-            </div>
+            <StatusFlags drug={drug} />
             <div className="medication-details mt-4">
               <div className="flex justify-between">
                 <h2 className="text-[16.88px] text-primary-700 font-medium	">
@@ -385,7 +346,7 @@ function DetailRevise({
   handleAlartNonSave,
   handleAlertClose,
 }) {
-  const [drugName, setDrugName] = useState(drug.drugName);
+  const [nickname, setnickName] = useState(drug.nickname);
   const [type, setType] = useState(drug.typeOfDrug);
   const [form, setForm] = useState(drug.formOfDrug);
   const [str, setStr] = useState(drug.strength);
@@ -395,7 +356,7 @@ function DetailRevise({
 
   const handleQuitAnyway = () => {
     // reset input values
-    setDrugName(drug.drugName);
+    setnickName(drug.nickname);
     setType(drug.typeOfDrug);
     setForm(drug.formOfDrug);
     setStr(drug.strength);
@@ -432,9 +393,9 @@ function DetailRevise({
             <input
               type="text"
               className="border-2 border-gray-400	rounded-md	w-full h-14 px-3 self-center text-gray-700 text-base"
-              value={drugName}
+              value={nickname}
               onChange={(e) => {
-                setDrugName(e.target.value);
+                setnickName(e.target.nickname);
                 setAnyChange(true);
               }}
             />
@@ -547,17 +508,18 @@ function DetailRevise({
             {anyChange ? (
               <button
                 className="mt-10 text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12"
-                onClick={() =>
+                onClick={() => {
                   handelSaveChanges({
-                    drugName: drugName,
+                    nickname: nickname,
                     typeOfDrug: type,
                     formOfDrug: form,
                     strength: str,
                     strengthUnit: strUnit,
                     amount: amt,
                     unit: amtUnit,
-                  })
-                }
+                  });
+                  setIsDetailRevisionOpen();
+                }}
               >
                 Save
               </button>
@@ -700,12 +662,13 @@ function RemainingRevise({
             {anyChange ? (
               <button
                 className="mt-10 text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12"
-                onClick={() =>
+                onClick={() => {
                   handelSaveChanges({
                     remaining: rem,
                     shortageLimit: shortagelim,
-                  })
-                }
+                  });
+                  setIsRemainingRevisionOpen(false);
+                }}
               >
                 Save
               </button>

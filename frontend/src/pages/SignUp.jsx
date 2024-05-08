@@ -50,15 +50,20 @@ const SignUp = ({ email, password, setSignup }) => {
     setReminderRefister(false);
     setNeedReminder(true);
     setProgress((progress) => progress + 1);
+    handleSubmit();
   };
 
   const handleNotificationSkip = () => {
     setReminderRefister(false);
     setProgress((progress) => progress + 1);
+    handleSubmit();
+  };
+
+  const handleModalClose = () => {
+    setReminderRefister(false);
   };
 
   const handleSubmit = () => {
-    setSignup(false);
     console.log("submitted");
     const firstName = firstN;
     const middleName = middleN;
@@ -95,7 +100,6 @@ const SignUp = ({ email, password, setSignup }) => {
       fcm,
     });
   };
-  console.log(bd);
 
   return (
     <>
@@ -278,7 +282,7 @@ const SignUp = ({ email, password, setSignup }) => {
                 </label>
                 <input
                   className="text-gray-500 border-2 border-gray-400	rounded-md	w-full h-14 pl-3 mt-1.5	"
-                  type="text"
+                  type="date"
                   placeholder="e.g May 20, 1980"
                   onChange={(e) => setBd(e.target.value)}
                 ></input>
@@ -298,29 +302,39 @@ const SignUp = ({ email, password, setSignup }) => {
                 </button>
               </div>
             ) : (
-              <div className="reminder-register-wrapper mt-48 rounded-t-2xl ">
-                <img
-                  src="./images/reminderRegistration.png"
-                  className="mx-auto"
-                />
-                <h3 className="text-primary-950 text-[21.36px] font-semibold text-center mt-[35px]">
-                  Do you want reminders?
-                </h3>
-                <p className="text-primary-950 text-base text-center mt-2">
-                  You can change it later on the settings.
-                </p>
-                <button
-                  className="mt-10 text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12"
-                  onClick={() => handleNotificationSet()}
-                >
-                  Turn on Notifications
-                </button>
-                <p
-                  className="mt-[14.5px] text-base text-gray-800 text-center cursor-pointer"
-                  onClick={() => handleNotificationSkip()}
-                >
-                  Skip
-                </p>
+              <div>
+                {/* for modal filter */}
+                <div
+                  className="modal fixed z-10 top-0 left-0 bg-gray-800 opacity-80 w-full h-[120%]"
+                  onClick={handleModalClose}
+                ></div>
+                {/* content */}
+                <div className="reminder-register-wrapper rounded-t-2xl bg-white fixed bottom-0 z-20 w-[calc(100%-2rem)] h-[428px] px-4 ">
+                  <img
+                    src="./images/reminderRegistration.png"
+                    className="mx-auto mt-[59px]"
+                  />
+                  <h3 className="text-primary-950 text-[21.36px] font-semibold text-center mt-[35px]">
+                    Do you want reminders?
+                  </h3>
+                  <p className="text-primary-950 text-base text-center mt-2">
+                    You can change it later on the settings.
+                  </p>
+                  <button
+                    className="mt-10 text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12"
+                    onClick={() => {
+                      handleNotificationSet();
+                    }}
+                  >
+                    Turn on Notifications
+                  </button>
+                  <p
+                    className="mt-[14.5px] text-base text-gray-800 text-center cursor-pointer"
+                    onClick={() => handleNotificationSkip()}
+                  >
+                    Skip
+                  </p>
+                </div>
               </div>
             )}
           </div>
@@ -341,19 +355,21 @@ const SignUp = ({ email, password, setSignup }) => {
             </p>
           </div>
           <button
-            className="mt-[183px] text-base text-gray-50 font-semibold rounded-3xl bg-primary-700 w-full h-12
-              "
+            className="mt-[183px] text-base text-gray-50 font-semibold rounded-3xl bg-primary-700 w-full h-12"
+            onClick={() => setSignup(false)}
           >
             <Link to="/drugs/create">Add an Medication</Link>
           </button>
-          <p className="mt-[14.5px] text-base text-gray-800 text-center">
+          <p
+            className="mt-[14.5px] text-base text-gray-800 text-center"
+            onClick={() => setSignup(false)}
+          >
             <Link to="/">Skip</Link>
           </p>
         </div>
       ) : (
         ""
       )}
-      <button onClick={handleSubmit}>handleSubmit</button>
     </>
   );
 };

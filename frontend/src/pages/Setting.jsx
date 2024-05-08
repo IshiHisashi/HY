@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import SearchDrug from "./SearchDrug.jsx";
 import { useAuthContext } from "../authContext.js";
-import { userId } from "../App.js";
+// import { userId } from "../App.js";
 import Footer from "../components/Footer.jsx";
 
 function Setting() {
@@ -13,6 +13,8 @@ function Setting() {
   const [isNotificationSettingOpen, setIsNotificationSettingOpen] =
     useState(false);
   const [isProfileSettingOpen, setisProfileSettingOpen] = useState(false);
+
+  console.log(userId);
 
   // Read user info
   useEffect(() => {
@@ -89,8 +91,12 @@ function Setting() {
         ""
       )}
 
-      {isNotificationSettingOpen ? <Notification user={user} /> : ""}
-      {isProfileSettingOpen ? <Profile user={user} /> : ""}
+      {isNotificationSettingOpen ? (
+        <Notification user={user} userId={userId} />
+      ) : (
+        ""
+      )}
+      {isProfileSettingOpen ? <Profile user={user} userId={userId} /> : ""}
       <Footer />
     </>
   );
@@ -98,12 +104,13 @@ function Setting() {
 
 export default Setting;
 
-function Notification({ user }) {
+function Notification({ user, userId }) {
   const [reminder, setreminder] = useState(user?.reminder);
   const handleToggle = () => {
     setreminder(!reminder);
+    console.log(userId);
     axios
-      .patch(`http://localhost:5555/users/${userId}`, { reminder: reminder })
+      .patch(`http://localhost:5555/users/${userId}`, { reminder: !reminder })
       .then(() => console.log("success"));
     //   };
   };
@@ -111,10 +118,11 @@ function Notification({ user }) {
   return (
     <>
       <div className="background bg-primary-100 h-[120vh]">
+        {console.log(reminder)}
         <div className="setting-front py-6 flex flex-col gap-[7px]">
           <div
             className="notification mx-4 p-4 h-[56px]  bg-white grid grid-cols-[1fr_auto] gap-2 relative cursor-pointer"
-            //   onClick={() => setIsNotificationSettingOpen(true)}
+            // onClick={() => setIsNotificationSettingOpen(true)}
           >
             <p className="text-gray-950 text-[16.88px] font-medium">
               Notifications
@@ -137,7 +145,7 @@ function Notification({ user }) {
   );
 }
 
-function Profile({ user }) {
+function Profile({ user, userId }) {
   const [firstName, setFirstName] = useState(user.firstName);
   const [middleName, setMiddleName] = useState(user.middleName);
   const [lastName, setLastName] = useState(user.lastName);

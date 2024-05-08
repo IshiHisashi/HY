@@ -51,7 +51,6 @@ async function save(userId) {
     vapidKey:
       "BIGHLUsIKPHRiT7ISIA8DquI6O5bK6xZ4DomZISS3TtmHg_rA7fUDMwfWF17TM8hzSB_ogxYvuwy3wRDo_TnZRA",
   });
-  // console.log(fcm_token);
 
   // Receive
   onMessage(messaging, (payload) => {
