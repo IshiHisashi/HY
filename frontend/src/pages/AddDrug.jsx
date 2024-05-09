@@ -7,15 +7,27 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+const currentURL = window.location.pathname;
+console.log(window.location.pathname);
+
 function CreateDrug({ setIsAddMedicationOpen }) {
   const userIdObj = useAuthContext();
   const [userId, setUserId] = useState(userIdObj.userId);
 
   // Steps controll
+  // Name
   const [nameRegistration, setNameRegistration] = useState(true);
+  const [isNameOpen, setIsNameOpen] = useState(true);
+  const [isNicknameOpen, setIsNicknameOpen] = useState(false);
+  // Drug info
   const [drugInfoRegistration, setDrugInfoRegistration] = useState(false);
+  const [progressDrugInfo, setProgressDrugInfo] = useState(1);
+  // Schedule info
   const [scheduleRegistration, setScheduleRegistration] = useState(false);
+  const [progressSch, setProgressSch] = useState(1);
+  // Reminder
   const [reminderRegistration, setReminderRefistration] = useState(false);
+  const [progressReminder, setProgressReminder] = useState(1);
 
   // State per each input values
   // Name
@@ -84,10 +96,6 @@ function CreateDrug({ setIsAddMedicationOpen }) {
       );
     }
   }, [drugName]);
-
-  const handlePrevious = () => {
-    setIsAddMedicationOpen(false);
-  };
 
   // Save the data (=register)
   const handleSaveDrug = () => {
@@ -223,33 +231,35 @@ function CreateDrug({ setIsAddMedicationOpen }) {
 
   return (
     <div className="mb-5">
-      <header className="pt-2.5 relative h-[54px] bg-white">
-        <h1 className="font-semibold text-lg text-center">Add Medication</h1>
-        <img
-          src="/images/arrow_back_ios.png"
-          className="absolute w-6 h-6 top-[50%] left-4 translate-y-[-55%] cursor-pointer"
-          onClick={() => handlePrevious()}
+      {nameRegistration ? (
+        <NameRegister
+          drugName={drugName}
+          setDrugName={setDrugName}
+          nickname={nickname}
+          setNickname={setNickname}
+          companyName={companyName}
+          setCompanyName={setCompanyName}
+          searchedDrugs={searchedDrugs}
+          setSearchedDrugs={setSearchedDrugs}
+          searchedDrugId={searchedDrugId}
+          setSearchedDrugId={setSearchedDrugId}
+          drugsBigData={drugsBigData}
+          setDrugsBigData={setDrugsBigData}
+          nameRegistration={nameRegistration}
+          setNameRegistration={setNameRegistration}
+          setDrugInfoRegistration={setDrugInfoRegistration}
+          setIsAddMedicationOpen={setIsAddMedicationOpen}
+          isNameOpen={isNameOpen}
+          setIsNameOpen={setIsNameOpen}
+          isNicknameOpen={isNicknameOpen}
+          setIsNicknameOpen={setIsNicknameOpen}
         />
-      </header>
-      <NameRegister
-        drugName={drugName}
-        setDrugName={setDrugName}
-        nickname={nickname}
-        setNickname={setNickname}
-        companyName={companyName}
-        setCompanyName={setCompanyName}
-        searchedDrugs={searchedDrugs}
-        setSearchedDrugs={setSearchedDrugs}
-        searchedDrugId={searchedDrugId}
-        setSearchedDrugId={setSearchedDrugId}
-        drugsBigData={drugsBigData}
-        setDrugsBigData={setDrugsBigData}
-        nameRegistration={nameRegistration}
-        setNameRegistration={setNameRegistration}
-        setDrugInfoRegistration={setDrugInfoRegistration}
-      />
+      ) : (
+        ""
+      )}
       {drugInfoRegistration ? (
         <DrugInfoRegister
+          nickname={nickname}
           typeOfDrug={typeOfDrug}
           setTypeOfDrug={setTypeOfDrug}
           formOfDrug={formOfDrug}
@@ -260,6 +270,11 @@ function CreateDrug({ setIsAddMedicationOpen }) {
           setStrengthUnit={setStrengthUnit}
           setDrugInfoRegistration={setDrugInfoRegistration}
           setScheduleRegistration={setScheduleRegistration}
+          setNameRegistration={setNameRegistration}
+          setIsNameOpen={setIsNameOpen}
+          setIsNicknameOpen={setIsNicknameOpen}
+          progressDrugInfo={progressDrugInfo}
+          setProgressDrugInfo={setProgressDrugInfo}
         />
       ) : (
         ""
@@ -280,7 +295,11 @@ function CreateDrug({ setIsAddMedicationOpen }) {
           setDoze_2={setDoze_2}
           doze_3={doze_3}
           setDoze_3={setDoze_3}
+          setDrugInfoRegistration={setDrugInfoRegistration}
+          setProgressDrugInfo={setProgressDrugInfo}
           setScheduleRegistration={setScheduleRegistration}
+          progressSch={progressSch}
+          setProgressSch={setProgressSch}
           setReminderRefistration={setReminderRefistration}
         />
       ) : (
@@ -289,12 +308,18 @@ function CreateDrug({ setIsAddMedicationOpen }) {
 
       {reminderRegistration ? (
         <ReminderRegister
+          navigate={navigate}
           setRemaining={setRemaining}
           setShortageLimit={setShortageLimit}
           unit={unit}
           frequencyDay={frequencyDay}
           frequencyWithinADay={frequencyWithinADay}
           handleSaveDrug={handleSaveDrug}
+          setIsAddMedicationOpen={setIsAddMedicationOpen}
+          setScheduleRegistration={setScheduleRegistration}
+          setReminderRegistration={setReminderRefistration}
+          progressReminder={progressReminder}
+          setProgressReminder={setProgressReminder}
         />
       ) : (
         ""
@@ -304,6 +329,17 @@ function CreateDrug({ setIsAddMedicationOpen }) {
 }
 
 export default CreateDrug;
+
+function Header({ children }) {
+  return (
+    <>
+      <header className="pt-2.5 relative h-[54px] bg-white">
+        <h1 className="font-semibold text-lg text-center">Add Medication</h1>
+        {children}
+      </header>
+    </>
+  );
+}
 
 function NameRegister({
   drugName,
@@ -321,10 +357,15 @@ function NameRegister({
   nameRegistration,
   setNameRegistration,
   setDrugInfoRegistration,
+  setIsAddMedicationOpen,
+  isNameOpen,
+  setIsNameOpen,
+  isNicknameOpen,
+  setIsNicknameOpen,
 }) {
-  const [isNameOpen, setIsNameOpen] = useState(true);
+  // const [isNameOpen, setIsNameOpen] = useState(true);
+  // const [isNicknameOpen, setIsNicknameOpen] = useState(false);
   const [isNameSearchOpen, setIsNameSearchOpen] = useState(false);
-  const [isNicknameOpen, setIsNicknameOpen] = useState(false);
 
   const handleClickNext = () => {
     if (drugName.length > 0) {
@@ -342,6 +383,16 @@ function NameRegister({
     }
   };
 
+  const handlePrevious = () => {
+    if (isNameOpen) {
+      setIsAddMedicationOpen(false);
+    }
+    if (isNicknameOpen) {
+      setIsNicknameOpen(false);
+      setIsNameOpen(true);
+    }
+  };
+
   const handleClickNickname = () => {
     setIsNicknameOpen(false);
     setNameRegistration(false);
@@ -351,6 +402,13 @@ function NameRegister({
 
   return (
     <>
+      <Header>
+        <img
+          src="/images/arrow_back_ios.png"
+          className="absolute w-6 h-6 top-[50%] left-4 translate-y-[-55%] cursor-pointer"
+          onClick={() => handlePrevious()}
+        />
+      </Header>
       {isNameOpen ? (
         <>
           <div className="text-wrapper mx-4 mt-10  text-primary-950">
@@ -461,6 +519,7 @@ function NameRegister({
 }
 
 function DrugInfoRegister({
+  nickname,
   typeOfDrug,
   setTypeOfDrug,
   formOfDrug,
@@ -471,11 +530,34 @@ function DrugInfoRegister({
   setStrengthUnit,
   setDrugInfoRegistration,
   setScheduleRegistration,
+  setNameRegistration,
+  setIsNameOpen,
+  setIsNicknameOpen,
+  progressDrugInfo,
+  setProgressDrugInfo,
 }) {
-  const [progress, setProgress] = useState(1);
-
   const handleProgessAdd = () => {
-    setProgress((progress) => progress + 1);
+    setProgressDrugInfo((progressDrugInfo) => progressDrugInfo + 1);
+  };
+
+  const handlePrevious = () => {
+    // type of med
+    if (progressDrugInfo === 1) {
+      if (nickname) {
+        setDrugInfoRegistration(false);
+        setNameRegistration(true);
+        setIsNicknameOpen(true);
+        setIsNameOpen(false);
+      }
+      if (!nickname) {
+        setDrugInfoRegistration(false);
+        setNameRegistration(true);
+        setIsNameOpen(true);
+      }
+    } else {
+      // form of med, frequency, strength
+      setProgressDrugInfo((progressDrugInfo) => progressDrugInfo - 1);
+    }
   };
 
   const handleCloseDrugInfo = () => {
@@ -485,8 +567,15 @@ function DrugInfoRegister({
 
   return (
     <>
+      <Header>
+        <img
+          src="/images/arrow_back_ios.png"
+          className="absolute w-6 h-6 top-[50%] left-4 translate-y-[-55%] cursor-pointer"
+          onClick={() => handlePrevious()}
+        />
+      </Header>
       <div className="druginfo-wrapper">
-        {progress === 1 ? (
+        {progressDrugInfo === 1 ? (
           <div className="type-of-drug">
             <div className="text-wrapper mx-4 mt-10  text-primary-950">
               <h2 className="text-2xl font-bold">
@@ -548,7 +637,9 @@ function DrugInfoRegister({
               <div className="next_name mt-[288px]">
                 <button
                   className="mt-10 text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12"
-                  onClick={(progress) => handleProgessAdd(progress)}
+                  onClick={(progressDrugInfo) =>
+                    handleProgessAdd(progressDrugInfo)
+                  }
                 >
                   Next
                 </button>
@@ -558,7 +649,7 @@ function DrugInfoRegister({
         ) : (
           ""
         )}
-        {progress === 2 ? (
+        {progressDrugInfo === 2 ? (
           <div className="form-of-drug">
             <div className="text-wrapper mx-4 mt-10  text-primary-950">
               <h2 className="text-2xl font-bold">
@@ -684,7 +775,9 @@ function DrugInfoRegister({
               <div className="next_name mt-[32px]">
                 <button
                   className="mt-10 text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12"
-                  onClick={(progress) => handleProgessAdd(progress)}
+                  onClick={(progressDrugInfo) =>
+                    handleProgessAdd(progressDrugInfo)
+                  }
                 >
                   Next
                 </button>
@@ -694,7 +787,7 @@ function DrugInfoRegister({
         ) : (
           ""
         )}
-        {progress === 3 ? (
+        {progressDrugInfo === 3 ? (
           <>
             <div className="type-of-drug">
               <div className="text-wrapper mx-4 mt-10  text-primary-950">
@@ -736,7 +829,9 @@ function DrugInfoRegister({
                 <div className="next_name mt-[397px]">
                   <button
                     className="mt-10 text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12"
-                    onClick={(progress) => handleProgessAdd(progress)}
+                    onClick={(progressDrugInfo) =>
+                      handleProgessAdd(progressDrugInfo)
+                    }
                   >
                     Next
                   </button>
@@ -747,7 +842,7 @@ function DrugInfoRegister({
         ) : (
           ""
         )}
-        {progress === 4 ? (
+        {progressDrugInfo === 4 ? (
           <>
             <div className="type-of-drug">
               <div className="text-wrapper mx-4 mt-10  text-primary-950">
@@ -815,10 +910,13 @@ function ScheduleRegister({
   setDoze_2,
   doze_3,
   setDoze_3,
+  setDrugInfoRegistration,
+  setProgressDrugInfo,
   setScheduleRegistration,
+  progressSch,
+  setProgressSch,
   setReminderRefistration,
 }) {
-  const [progress, setProgress] = useState(1);
   const [doze1open, setDoze1open] = useState(true);
   const [doze2open, setDoze2open] = useState(false);
   const [doze3open, setDoze3open] = useState(false);
@@ -844,13 +942,54 @@ function ScheduleRegister({
   };
 
   const handleProgessAdd = () => {
-    setProgress((progress) => progress + 1);
+    setProgressSch((progressSch) => progressSch + 1);
+  };
+
+  const handlePrevious = () => {
+    if (progressSch === 1) {
+      setScheduleRegistration(false);
+      setDrugInfoRegistration(true);
+      setProgressDrugInfo(4);
+    }
+    if (progressSch === 2) {
+      if (doze1open) {
+        setProgressSch((progressSch) => progressSch - 1);
+      }
+      if (doze2open) {
+        setDoze1open(true);
+        setDoze2open(false);
+      }
+      if (doze3open) {
+        setDoze2open(true);
+        setDoze3open(false);
+      }
+    }
+    if (progressSch === 3) {
+      if (frequencyWithinADay === 1) {
+        setProgressSch((progressSch) => progressSch - 1);
+        setDoze1open(true);
+      }
+      if (frequencyWithinADay === 2) {
+        setProgressSch((progressSch) => progressSch - 1);
+        setDoze2open(true);
+      }
+      if (frequencyWithinADay === 3) {
+        setProgressSch((progressSch) => progressSch - 1);
+        setDoze3open(true);
+      }
+    }
+    if (progressSch === 4) {
+      setProgressSch((progressSch) => progressSch - 1);
+    }
+    if (progressSch === 5) {
+      setProgressSch((progressSch) => progressSch - 1);
+    }
   };
 
   const handleClickDoze1 = () => {
     // Set-doze-1 will be here
     if (frequencyWithinADay === 1) {
-      setProgress((progress) => progress + 1);
+      setProgressSch((progressSch) => progressSch + 1);
     } else {
       setDoze1open(false);
       setDoze2open(true);
@@ -860,7 +999,7 @@ function ScheduleRegister({
   const handleClickDoze2 = () => {
     // Set-doze-2 will be here
     if (frequencyWithinADay === 2) {
-      setProgress((progress) => progress + 1);
+      setProgressSch((progressSch) => progressSch + 1);
     } else {
       setDoze2open(false);
       setDoze3open(true);
@@ -870,12 +1009,12 @@ function ScheduleRegister({
   const handleClickDoze3 = () => {
     // Set-doze-3 will be here
     setDoze3open(false);
-    setProgress((progress) => progress + 1);
+    setProgressSch((progressSch) => progressSch + 1);
   };
 
   const handleClickNeedEndDay = () => {
     if (needEndDay) {
-      setProgress((progress) => progress + 1);
+      setProgressSch((progressSch) => progressSch + 1);
     }
     if (!needEndDay) {
       //If user answers 'no', set the day 3 yrs later
@@ -894,8 +1033,15 @@ function ScheduleRegister({
 
   return (
     <>
+      <Header>
+        <img
+          src="/images/arrow_back_ios.png"
+          className="absolute w-6 h-6 top-[50%] left-4 translate-y-[-55%] cursor-pointer"
+          onClick={() => handlePrevious()}
+        />
+      </Header>
       <div className="schedule-wrapper">
-        {progress === 1 ? (
+        {progressSch === 1 ? (
           <div className="frequency">
             <div className="text-wrapper mx-4 mt-10  text-primary-950">
               <h2 className="text-2xl font-bold">How often do you take it?</h2>
@@ -979,7 +1125,7 @@ function ScheduleRegister({
               <div className="next mt-[224px]">
                 <button
                   className="mt-10 text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12"
-                  onClick={(progress) => handleProgessAdd(progress)}
+                  onClick={(progressSch) => handleProgessAdd(progressSch)}
                 >
                   Next
                 </button>
@@ -990,7 +1136,7 @@ function ScheduleRegister({
           ""
         )}
 
-        {progress === 2 ? (
+        {progressSch === 2 ? (
           <div className="doze">
             <div className="text-wrapper mx-4 mt-10  text-primary-950">
               <h2 className="text-2xl font-bold">
@@ -1069,7 +1215,7 @@ function ScheduleRegister({
           ""
         )}
 
-        {progress === 3 ? (
+        {progressSch === 3 ? (
           <div className="startday">
             <div className="text-wrapper mx-4 mt-10  text-primary-950">
               <h2 className="text-2xl font-bold">
@@ -1087,7 +1233,7 @@ function ScheduleRegister({
               <div className="next_name mt-[224px]">
                 <button
                   className="mt-10 text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12"
-                  onClick={(progress) => handleProgessAdd(progress)}
+                  onClick={(progressSch) => handleProgessAdd(progressSch)}
                 >
                   Next
                 </button>
@@ -1098,7 +1244,7 @@ function ScheduleRegister({
           ""
         )}
 
-        {progress === 4 ? (
+        {progressSch === 4 ? (
           <div className="endday-need">
             <div className="text-wrapper mx-4 mt-10  text-primary-950">
               <h2 className="text-2xl font-bold">Do you have any end day? </h2>
@@ -1155,7 +1301,7 @@ function ScheduleRegister({
           ""
         )}
 
-        {progress === 5 ? (
+        {progressSch === 5 ? (
           <div className="endday">
             <div className="text-wrapper mx-4 mt-10  text-primary-950">
               <h2 className="text-2xl font-bold">When is the end day?</h2>
@@ -1189,24 +1335,47 @@ function ScheduleRegister({
 }
 
 function ReminderRegister({
+  navigate,
   setRemaining,
   setShortageLimit,
   unit,
   frequencyDay,
   frequencyWithinADay,
   handleSaveDrug,
+  setScheduleRegistration,
+  setReminderRegistration,
+  progressReminder,
+  setProgressReminder,
+  setIsAddMedicationOpen,
 }) {
+  console.log(currentURL);
   const [progress, setProgress] = useState(1);
   const [needReminder, setNeedReminder] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleProgessAdd = () => {
-    setProgress((progress) => progress + 1);
+    setProgressReminder((progressReminder) => progressReminder + 1);
+  };
+
+  const handlePrevious = () => {
+    if (progressReminder === 1) {
+      setScheduleRegistration(true);
+      setReminderRegistration(false);
+    }
+    if (progressReminder === 2 || progressReminder === 3) {
+      setProgressReminder((progressReminder) => progressReminder - 1);
+    }
   };
 
   const handleSaveDrugData = () => {
     handleSaveDrug();
     setIsModalOpen(true);
+  };
+
+  const handleAddAnotherDrug = async () => {
+    await setIsAddMedicationOpen(false);
+    await setReminderRegistration(false);
+    await setIsAddMedicationOpen(true);
   };
 
   const handleModalClose = () => {
@@ -1215,7 +1384,14 @@ function ReminderRegister({
 
   return (
     <>
-      {progress === 1 ? (
+      <Header>
+        <img
+          src="/images/arrow_back_ios.png"
+          className="absolute w-6 h-6 top-[50%] left-4 translate-y-[-55%] cursor-pointer"
+          onClick={() => handlePrevious()}
+        />
+      </Header>
+      {progressReminder === 1 ? (
         <div className="need-reminder">
           <div className="text-wrapper mx-4 mt-10  text-primary-950">
             <h2 className="text-2xl font-bold">
@@ -1254,7 +1430,7 @@ function ReminderRegister({
                   name="setendday"
                   id="yes"
                   className="sr-only	peer"
-                  onClick={(e) => setNeedReminder(true)}
+                  onClick={() => setNeedReminder(true)}
                 />
                 <label
                   htmlFor="yes"
@@ -1268,7 +1444,9 @@ function ReminderRegister({
               {needReminder ? (
                 <button
                   className="mt-10 text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12"
-                  onClick={(progress) => handleProgessAdd(progress)}
+                  onClick={(progressReminder) =>
+                    handleProgessAdd(progressReminder)
+                  }
                 >
                   Next
                 </button>
@@ -1289,7 +1467,7 @@ function ReminderRegister({
       ) : (
         ""
       )}
-      {progress === 2 ? (
+      {progressReminder === 2 ? (
         <div className="stock">
           <div className="text-wrapper mx-4 mt-10  text-primary-950">
             <h2 className="text-2xl font-bold">
@@ -1311,7 +1489,9 @@ function ReminderRegister({
             <div className="next_name mt-[388px]">
               <button
                 className="mt-10 text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12"
-                onClick={(progress) => handleProgessAdd(progress)}
+                onClick={(progressReminder) =>
+                  handleProgessAdd(progressReminder)
+                }
               >
                 {console.log(needReminder)}
                 {needReminder ? "Next" : "Save"}
@@ -1322,7 +1502,7 @@ function ReminderRegister({
       ) : (
         ""
       )}
-      {progress === 3 ? (
+      {progressReminder === 3 ? (
         <div className="threshold">
           <div className="text-wrapper mx-4 mt-10  text-primary-950">
             <h2 className="text-2xl font-bold">
@@ -1384,10 +1564,21 @@ function ReminderRegister({
                 The medication Successfully Added!
               </h2>
               <div className="mt-6">
-                <button className="text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12">
+                <button
+                  className="text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12"
+                  onClick={() => handleAddAnotherDrug()}
+                >
                   Add another medication
                 </button>
-                <p className="text-base  w-full h-12 py-[14.5px] mb-[40px] cursor-pointer text-center">
+                <p
+                  className="text-base  w-full h-12 py-[14.5px] mb-[40px] cursor-pointer text-center"
+                  onClick={() => {
+                    setIsAddMedicationOpen(false);
+                    if (currentURL === "/login") {
+                      navigate("/");
+                    }
+                  }}
+                >
                   I’m done
                 </p>
               </div>

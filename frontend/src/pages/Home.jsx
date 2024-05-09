@@ -76,10 +76,12 @@ function Home() {
 
   // Read Drug Data
   useEffect(() => {
+    console.log(userId);
     if (userId && userId !== "logout")
       axios
         .get(`http://localhost:5555/users/${userId}/drugs/shortage`)
         .then((res) => {
+          console.log(res.data.data.shortageDrugs);
           setShortageDrugs(res.data.data.shortageDrugs);
         })
         .catch(setShortageDrugs(null));
@@ -91,6 +93,7 @@ function Home() {
       axios
         .get(`http://localhost:5555/users/${userId}/logs/underuser`)
         .then((res) => {
+          console.log(res.data.data.logs);
           setLogs(res.data.data.logs);
         });
   }, [userId]);
@@ -119,7 +122,7 @@ function Home() {
   };
 
   return (
-    <div className="bg-primary-100 min-h-screen relative">
+    <div className="bg-primary-100 min-h-screen relative pb-[100px]">
       <header className="pt-2.5 relative h-[54px] bg-white">
         <h1 className="font-semibold text-lg text-center">Schedule</h1>
         <button
@@ -259,7 +262,7 @@ function Home() {
           }`}</p>
         </div>
 
-        <ul>
+        <ul className="flex flex-col gap-2">
           {logsDate.map((log) => (
             <Log
               log={log}
@@ -388,14 +391,31 @@ function Log({ log, isModalOpen, setIsModalOpen }) {
       </div>
 
       {isModalOpen ? (
-        <div
-          className="modal fixed z-10 top-0 left-0 bg-gray-800 opacity-80 w-full h-[120%]"
-          onClick={handleModalClose}
-        ></div>
+        <>
+          <div
+            className="modal fixed z-10 top-0 left-0 bg-gray-800 opacity-80 w-full h-[120%]"
+            onClick={handleModalClose}
+          ></div>
+          {openLog === log.drugId.drugName && !takenTime ? (
+            <LogDetails
+              log={log}
+              date={date}
+              hoursPlan={hoursPlan}
+              minutesPlan={minutesPlan}
+              ampmPlan={ampmPlan}
+              frequencyDay={frequencyDay}
+              frequencyWithinADay={frequencyWithinADay}
+              setIsModalOpen={setIsModalOpen}
+              setOpenLog={setOpenLog}
+            />
+          ) : (
+            ""
+          )}
+        </>
       ) : (
         ""
       )}
-      {openLog === log.drugId.drugName && !takenTime ? (
+      {/* {openLog === log.drugId.drugName && !takenTime ? (
         <LogDetails
           log={log}
           date={date}
@@ -409,7 +429,7 @@ function Log({ log, isModalOpen, setIsModalOpen }) {
         />
       ) : (
         ""
-      )}
+      )} */}
     </>
   );
 }
@@ -461,7 +481,7 @@ function LogDetails({
             {date.split(" ")[1]} {new Date(log.plannedDateTime).getDate()}
           </p>
           <h4 className="text-gray-950 text-[18.98px] font-semibold">
-            {log.drugId.drugName}
+            {log.drugId.nickname ? log.drugId.nickname : log.drugId.drugName}
           </h4>
           <div className="text-gray-950 mt-4 grid grid-cols-[auto_1fr]">
             <p className="text-[11.85px] mr-1.5">Official Name: </p>
@@ -476,7 +496,7 @@ function LogDetails({
                 : frequencyDay === 3
                 ? "3 times"
                 : ""}{" "}
-              in every
+              in every{" "}
               {frequencyWithinADay === 1
                 ? " day"
                 : frequencyWithinADay > 1

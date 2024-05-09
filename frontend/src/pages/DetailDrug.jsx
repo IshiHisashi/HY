@@ -26,6 +26,7 @@ function ShowDrug() {
   const typeOfDrug = drug.typeOfDrug;
   const frequencyDay = drug.takein?.frequencyDay;
   const frequencyWithinADay = drug.takein?.frequencyWithinADay;
+  const [closestUntaken, setClosestUntaken] = useState("");
 
   useEffect(() => {
     axios
@@ -53,6 +54,25 @@ function ShowDrug() {
       })
       .catch((err) => console.log(err));
   };
+
+  const getuntakenLog = () => {
+    axios.get(`http://localhost:5555/drugs/${id}/logs/untaken`).then((res) => {
+      const planedTimeArr = [];
+      res.data.data.logs.forEach((el) => {
+        if (new Date(el.plannedDateTime) > new Date())
+          planedTimeArr.push(el.plannedDateTime);
+      });
+      if (planedTimeArr.length > 0) {
+        const closestOne = planedTimeArr.reduce((acc, val) => {
+          return acc < val ? acc : val;
+        });
+        console.log(closestOne);
+        setClosestUntaken(closestOne);
+      }
+    });
+  };
+
+  getuntakenLog();
 
   const handleStopTakingDrug = () => {
     // Change drug status to 'completed'
@@ -127,7 +147,6 @@ function ShowDrug() {
   const handleAlertClose = () => {
     setAlertNonSave(false);
   };
-  console.log(drug);
 
   return (
     <div>
@@ -157,16 +176,20 @@ function ShowDrug() {
               </div>
               <div className="grid grid-cols-[90px_1fr] gap-y-2 gap-x-3 text-gray-950 mt-2">
                 <p className="text-[13.33px]">Official Name</p>
-                <p className="text-base">{drug.drugName}</p>
+                <p className="text-base">
+                  {drug.companyName ? drug.drugName : "-"}
+                </p>
                 <p className="text-[13.33px]">Company</p>
-                <p className="text-base">{drug.companyName}</p>
+                <p className="text-base">{drug.companyName || "-"}</p>
                 <p className="text-[13.33px]">Form</p>
-                <p className="text-base">{drug.formOfDrug}</p>
+                <p className="text-base">{drug.formOfDrug || "-"}</p>
                 <p className="text-[13.33px]"> Strength</p>
-                <p className="text-base">{/* {drug.amount} {drug.unit} */}</p>
+                <p className="text-base">
+                  {drug.strength || "-"} {drug.strengthUnit || ""}
+                </p>
                 <p className="text-[13.33px]">Volume</p>
                 <p className="text-base">
-                  {drug.amount} {drug.unit}/ per time
+                  {drug.amount || "-"} {drug.unit || ""}/ per time
                 </p>
               </div>
             </div>
@@ -184,7 +207,7 @@ function ShowDrug() {
                     : frequencyDay === 3
                     ? "3 times"
                     : ""}{" "}
-                  in every
+                  in every{" "}
                   {frequencyWithinADay === 1
                     ? " day"
                     : frequencyWithinADay > 1
@@ -198,18 +221,22 @@ function ShowDrug() {
                 <p className="text-[13.33px]">Doze 3</p>
                 <p className="text-base">{drug.takein?.doze_3 || "-"}</p>
                 <p className="text-[13.33px]"> Last Took</p>
-                <p className="text-base">{/* {drug.amount} {drug.unit} */}</p>
+                <p className="text-base">
+                  {drug.lastTakenDate || "Untaken yet"}
+                </p>
                 <p className="text-[13.33px]">Next Take</p>
                 <p className="text-base">
-                  {drug.amount} {drug.unit}/ per time
+                  {closestUntaken
+                    ? new Date(closestUntaken).toLocaleString()
+                    : "No upcoming take"}
                 </p>
                 <p className="text-[13.33px]">Start Day</p>
                 <p className="text-base">
-                  {drug.amount} {drug.unit}/ per time
+                  {new Date(drug.takein?.startDate).toLocaleString()}
                 </p>
                 <p className="text-[13.33px]">End Day</p>
                 <p className="text-base">
-                  {drug.amount} {drug.unit}/ per time
+                  {new Date(drug.takein?.endDate).toLocaleString()}
                 </p>
               </div>
             </div>
@@ -227,11 +254,13 @@ function ShowDrug() {
               <div className="grid grid-cols-[90px_1fr] gap-y-2 gap-x-3 text-gray-950 mt-2">
                 <p className="text-[13.33px]">Remaining</p>
                 <p className="text-base">
-                  {drug.remaining} {drug.unit} left
+                  {drug.remaining ? `${drug.remaining} ${drug.unit} left` : "-"}
                 </p>
                 <p className="text-[13.33px]">Reminder</p>
                 <p className="text-base">
-                  When it remains less than {drug.shortageLimit} {drug.unit}
+                  {drug.shortageLimit
+                    ? ` When it remains less than ${drug.shortageLimit} ${drug.unit}`
+                    : "-"}
                 </p>
               </div>
             </div>
