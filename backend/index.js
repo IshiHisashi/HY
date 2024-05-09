@@ -67,7 +67,11 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "DELETE", "PATCH"],
+    origin: [
+      "http://localhost:3000",
+      "https://hy-7hyq6d3ye-ishis-projects-a730a12c.vercel.app",
+    ],
   })
 );
 
