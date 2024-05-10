@@ -68,6 +68,9 @@ app.use(
   cors({
     credentials: true,
     methods: ["GET", "POST", "DELETE", "PATCH"],
+    exposedHeaders: ["Set-Cookie"],
+    secure: true,
+    sameSite: "None",
     origin: [
       "http://localhost:3000",
       "https://hy-7hyq6d3ye-ishis-projects-a730a12c.vercel.app",
