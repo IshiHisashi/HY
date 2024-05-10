@@ -34,7 +34,7 @@ const useAuth = () => {
         "http://localhost:5555/users/loggedinuser"
       );
       const id = response.data.id;
-      console.log(id);
+      // console.log(id);
       setUserId(id);
     } catch (error) {
       console.log("fail due :", error);
