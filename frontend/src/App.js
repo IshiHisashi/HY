@@ -78,10 +78,10 @@ if ("serviceWorker" in navigator) {
     })
     .then(function (subscription) {
       console.log("User is subscribed:", subscription);
-      window.location.reload();
     })
     .catch(function (err) {
       console.log("Service worker registration failed, error:", err);
+      window.location.reload();
     });
 }
 async function save(userId) {
