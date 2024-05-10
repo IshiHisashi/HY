@@ -38,6 +38,21 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = await getMessaging(app);
 //
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, "+") // Replace - with +
+    .replace(/_/g, "/"); // Replace _ with /
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
 // Notification
 // SW
 if ("serviceWorker" in navigator) {
@@ -45,6 +60,24 @@ if ("serviceWorker" in navigator) {
     .register("../firebase-messaging-sw.js")
     .then(function (registration) {
       console.log("Registration successful, scope is:", registration.scope);
+      return navigator.serviceWorker.ready;
+    })
+    .then(function (registration) {
+      console.log("ok up until this point");
+      // Now that the Service Worker is ready, proceed to subscribe the user
+
+      const applicationServerKey = urlBase64ToUint8Array(
+        "BIGHLUsIKPHRiT7ISIA8DquI6O5bK6xZ4DomZISS3TtmHg_rA7fUDMwfWF17TM8hzSB_ogxYvuwy3wRDo_TnZRA"
+      );
+      return registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: applicationServerKey,
+      });
+
+      // return registration.pushManager.subscribe({ userVisibleOnly: true });
+    })
+    .then(function (subscription) {
+      console.log("User is subscribed:", subscription);
     })
     .catch(function (err) {
       console.log("Service worker registration failed, error:", err);
