@@ -34,10 +34,10 @@ messaging.onBackgroundMessage((payload) => {
   }
 });
 
-self.addEventListener("install", (event) => {
-  console.log("Service Worker installing.");
-  self.skipWaiting(); // Forces the waiting Service Worker to become the active Service Worker
-});
+// self.addEventListener("install", (event) => {
+//   console.log("Service Worker installing.");
+//   self.skipWaiting(); // Forces the waiting Service Worker to become the active Service Worker
+// });
 
 self.addEventListener("activate", (event) => {
   console.log("Service Worker activating.");
