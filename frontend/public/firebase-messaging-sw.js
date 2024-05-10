@@ -33,3 +33,13 @@ messaging.onBackgroundMessage((payload) => {
     self.registration.showNotification(notificationTitle, notificationOptions);
   }
 });
+
+self.addEventListener("install", (event) => {
+  console.log("Service Worker installing.");
+  self.skipWaiting(); // Forces the waiting Service Worker to become the active Service Worker
+});
+
+self.addEventListener("activate", (event) => {
+  console.log("Service Worker activating.");
+  event.waitUntil(self.clients.claim()); // Takes control of the page as soon as it's activated
+});
