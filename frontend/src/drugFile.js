@@ -15,7 +15,7 @@ const DrugFile = ({}) => {
   // Read Drug Data
   useEffect(() => {
     if (userId && userId !== "logout") {
-      axios.get("http://localhost:5555/drugs").then((res) => {
+      axios.get("https://hy-server.vercel.app/drugs").then((res) => {
         setDrugs(res.data.data.drugs);
       });
     }

@@ -8,7 +8,7 @@ const useAuth = () => {
 
   const signup = async (data) => {
     try {
-      await axios.post("http://localhost:5555/users/signup", data);
+      await axios.post("https://hy-server.vercel.app/users/signup", data);
       await getUser();
     } catch (error) {
       console.log(error);
@@ -18,7 +18,7 @@ const useAuth = () => {
   // login
   const login = async (data) => {
     try {
-      await axios.post("http://localhost:5555/users/login", data);
+      await axios.post("https://hy-server.vercel.app/users/login", data);
       await getUser();
       console.log("loggedin");
     } catch (error) {
@@ -31,7 +31,7 @@ const useAuth = () => {
     try {
       axios.defaults.withCredentials = true;
       const response = await axios.get(
-        "http://localhost:5555/users/loggedinuser"
+        "https://hy-server.vercel.app/users/loggedinuser"
       );
       const id = response.data.id;
       // console.log(id);
@@ -44,7 +44,7 @@ const useAuth = () => {
 
   const logout = () => {
     setUserId("logout");
-    axios.delete("http://localhost:5555/users/revoke_token");
+    axios.delete("https://hy-server.vercel.app/users/revoke_token");
   };
 
   return { userId, setUserId, signup, getUser, login, logout };

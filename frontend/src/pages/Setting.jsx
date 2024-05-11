@@ -19,7 +19,7 @@ function Setting() {
   // Read user info
   useEffect(() => {
     if (userId) {
-      axios.get(`http://localhost:5555/users/${userId}`).then((res) => {
+      axios.get(`https://hy-server.vercel.app/users/${userId}`).then((res) => {
         console.log(res);
         setUser(res.data.data.user);
       });
@@ -111,7 +111,9 @@ function Notification({ user, userId }) {
     setreminder(!reminder);
     console.log(userId);
     axios
-      .patch(`http://localhost:5555/users/${userId}`, { reminder: !reminder })
+      .patch(`https://hy-server.vercel.app/users/${userId}`, {
+        reminder: !reminder,
+      })
       .then(() => console.log("success"));
     //   };
   };
@@ -162,7 +164,7 @@ function Profile({ user, userId }) {
       dateofbirth,
     };
     axios
-      .patch(`http://localhost:5555/users/${userId}`, data)
+      .patch(`https://hy-server.vercel.app/users/${userId}`, data)
       .then(() => console.log("success"));
   };
 

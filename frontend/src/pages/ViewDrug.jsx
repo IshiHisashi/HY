@@ -15,9 +15,11 @@ function ViewDrug() {
   // Read Drug Data
   useEffect(() => {
     if (userId && userId !== "logout")
-      axios.get(`http://localhost:5555/users/${userId}/drugs`).then((res) => {
-        setDrugs(res.data.data.drugs);
-      });
+      axios
+        .get(`https://hy-server.vercel.app/users/${userId}/drugs`)
+        .then((res) => {
+          setDrugs(res.data.data.drugs);
+        });
   }, [userId]);
 
   const handleShowAddMedication = () => {

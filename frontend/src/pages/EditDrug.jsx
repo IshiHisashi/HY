@@ -23,7 +23,7 @@ function EditDrug() {
   const { id } = useParams();
   console.log(id);
   useEffect(() => {
-    axios.get(`http://localhost:5555/drugs/${id}`).then((res) => {
+    axios.get(`https://hy-server.vercel.app/drugs/${id}`).then((res) => {
       const drugData = res.data.data.aDrug;
       console.log(drugData);
       setDrugName(drugData.drugName);
@@ -66,7 +66,7 @@ function EditDrug() {
       status,
     };
     axios
-      .patch(`http://localhost:5555/drugs/${id}`, data)
+      .patch(`https://hy-server.vercel.app/drugs/${id}`, data)
       .then(() => {
         navigate("/");
       })
