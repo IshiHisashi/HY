@@ -127,7 +127,7 @@ function CreateDrug({ setIsAddMedicationOpen }) {
     };
     // Create Drug data
     axios
-      .post(`http://localhost:5555/drugs`, data)
+      .post(`https://hy-server.vercel.app/drugs`, data)
       .then((res) => {
         console.log("success");
         return res.data.data.drug._id;
@@ -199,7 +199,7 @@ function CreateDrug({ setIsAddMedicationOpen }) {
         logArr.forEach((el) => {
           axios
             .post(
-              `http://localhost:5555/logs`,
+              `https://hy-server.vercel.app/logs`,
               {
                 userId,
                 drugId: id,
@@ -212,7 +212,7 @@ function CreateDrug({ setIsAddMedicationOpen }) {
             })
             .then((log) => {
               console.log(log);
-              axios.post(`http://localhost:5555/schedules`, {
+              axios.post(`https://hy-server.vercel.app/schedules`, {
                 _id: log._id,
                 expireAt: log.plannedDateTime,
               });

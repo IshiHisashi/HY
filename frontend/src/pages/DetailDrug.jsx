@@ -30,7 +30,7 @@ function ShowDrug() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5555/drugs/${id}`)
+      .get(`https://hy-server.vercel.app/drugs/${id}`)
       .then((res) => {
         setDrug(res.data.data.aDrug);
       })
@@ -44,7 +44,7 @@ function ShowDrug() {
     console.log(newRemaining);
     setUpdateOpen(false);
     axios
-      .patch(`http://localhost:5555/drugs/${id}`, {
+      .patch(`https://hy-server.vercel.app/drugs/${id}`, {
         remaining: newRemaining,
       })
       .then((res) => {
@@ -56,20 +56,22 @@ function ShowDrug() {
   };
 
   const getuntakenLog = () => {
-    axios.get(`http://localhost:5555/drugs/${id}/logs/untaken`).then((res) => {
-      const planedTimeArr = [];
-      res.data.data.logs.forEach((el) => {
-        if (new Date(el.plannedDateTime) > new Date())
-          planedTimeArr.push(el.plannedDateTime);
-      });
-      if (planedTimeArr.length > 0) {
-        const closestOne = planedTimeArr.reduce((acc, val) => {
-          return acc < val ? acc : val;
+    axios
+      .get(`https://hy-server.vercel.app/drugs/${id}/logs/untaken`)
+      .then((res) => {
+        const planedTimeArr = [];
+        res.data.data.logs.forEach((el) => {
+          if (new Date(el.plannedDateTime) > new Date())
+            planedTimeArr.push(el.plannedDateTime);
         });
-        console.log(closestOne);
-        setClosestUntaken(closestOne);
-      }
-    });
+        if (planedTimeArr.length > 0) {
+          const closestOne = planedTimeArr.reduce((acc, val) => {
+            return acc < val ? acc : val;
+          });
+          console.log(closestOne);
+          setClosestUntaken(closestOne);
+        }
+      });
   };
 
   getuntakenLog();
@@ -78,13 +80,13 @@ function ShowDrug() {
     // Change drug status to 'completed'
     let deleteLogsArr = [];
     axios
-      .patch(`http://localhost:5555/drugs/${id}`, {
+      .patch(`https://hy-server.vercel.app/drugs/${id}`, {
         status: "stop taking",
       })
       .then((res) => console.log("success"));
     // Delete untaken Logs (*Wish to be replaced by simpler 'deleteMany function in mongoose')
     axios
-      .get(`http://localhost:5555/drugs/${id}/logs/untaken`)
+      .get(`https://hy-server.vercel.app/drugs/${id}/logs/untaken`)
       .then((res) => {
         console.log(res.data.data.logs);
         res.data.data.logs.forEach((log) => {
@@ -97,7 +99,7 @@ function ShowDrug() {
         console.log(deleteId);
         deleteId.forEach((logId) => {
           axios
-            .delete(`http://localhost:5555/logs/${logId}`)
+            .delete(`https://hy-server.vercel.app/logs/${logId}`)
             .then(() => console.log("success"));
         });
       });
@@ -107,7 +109,7 @@ function ShowDrug() {
     let deleteLogsArr = [];
     // Delete All the Logs (*Wish to be replaced by simpler 'deleteMany function in mongoose')
     axios
-      .get(`http://localhost:5555/drugs/${id}/logs`)
+      .get(`https://hy-server.vercel.app/drugs/${id}/logs`)
       .then((res) => {
         console.log(res.data.data.logs);
         res.data.data.logs.forEach((log) => {
@@ -119,14 +121,16 @@ function ShowDrug() {
       .then((deleteId) => {
         console.log(deleteId);
         deleteId.forEach((logId) => {
-          axios.delete(`http://localhost:5555/logs/${logId}`).then(() => {
-            console.log("success");
-          });
+          axios
+            .delete(`https://hy-server.vercel.app/logs/${logId}`)
+            .then(() => {
+              console.log("success");
+            });
         });
       });
     // Delete the drug
     axios
-      .delete(`http://localhost:5555/drugs/${id}`)
+      .delete(`https://hy-server.vercel.app/drugs/${id}`)
       .then(() => console.log("deleted sccessfully"))
       .then(navigate("/drugs/view"));
   };
@@ -137,7 +141,7 @@ function ShowDrug() {
 
   const handelSaveChanges = (data) => {
     axios
-      .patch(`http://localhost:5555/drugs/${drug._id}`, data)
+      .patch(`https://hy-server.vercel.app/drugs/${drug._id}`, data)
       .then(() => console.log("success!!"));
   };
 
