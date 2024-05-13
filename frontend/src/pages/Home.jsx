@@ -296,7 +296,7 @@ function Home() {
             className="modal fixed z-10 top-0 left-0 bg-gray-800 opacity-80 w-full h-[120%]"
             onClick={handleModalClose}
           ></div>
-          <div className="px-4 bg-white rounded-t-2xl h-[98vh] overflow-scroll	 w-full fixed bottom-0 z-20">
+          <div className="px-4 bg-white rounded-t-2xl h-[98vh] overflow-scroll	w-full fixed bottom-0 z-20">
             <AddDrug setIsAddMedicationOpen={setIsAddMedicationOpen} />
           </div>
         </>

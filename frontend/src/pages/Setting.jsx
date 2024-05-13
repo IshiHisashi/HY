@@ -16,6 +16,8 @@ function Setting() {
 
   console.log(userId);
 
+  const navigate = useNavigate();
+
   // Read user info
   useEffect(() => {
     if (userId) {
@@ -26,9 +28,16 @@ function Setting() {
     }
   }, [userIdObj]);
 
+  // Logout
+  const { logout } = useAuthContext();
+  const handleSubmit = (e) => {
+    console.log("logged out");
+    logout();
+    navigate("/login");
+  };
+
   return (
     <>
-      {console.log(user)}
       <header className="pt-2.5 relative h-[54px] bg-white ">
         <h1 className="font-semibold text-lg text-center">
           {isNotificationSettingOpen
@@ -84,6 +93,15 @@ function Setting() {
                 alt=""
                 className="w-6 absolute top-[50%] right-[16px] translate-y-[-50%]"
               />
+            </div>
+            <div className="mt-4 flex justify-center">
+              {" "}
+              <p
+                className="text-[18.99px] text-gray-500 cursor-pointer inline-block"
+                onClick={(e) => handleSubmit(e)}
+              >
+                Log out
+              </p>
             </div>
           </div>{" "}
         </div>
