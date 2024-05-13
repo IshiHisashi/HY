@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks.js";
 import { useAuthContext } from "../authContext.js";
 
-const Login = () => {
+const Logout = () => {
   const { logout } = useAuthContext();
   const handleSubmit = (e) => {
     console.log("logged out");
@@ -20,4 +20,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Logout;

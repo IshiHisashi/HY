@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Switch } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import Logout from "./pages/Logout.jsx";
@@ -143,8 +143,27 @@ function App() {
 
   return (
     <div>
+      {!userId || userId === "logout" ? (
+        <Routes>
+          {/* <Route path="/login" element={<Login />} /> */}
+          <Route path="/*" element={<Login />} />
+        </Routes>
+      ) : (
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/drugs/create" element={<CreateDrug />} />
+          <Route path="/drugs/view" element={<ViewDrug />} />
+          <Route path="/drugs/delete/:id" element={<DeleteDrug />} />
+          <Route path="/drugs/edit/:id" element={<EditDrug />} />
+          <Route path="/drugs/detail/:id" element={<DetailDrug />} />
+          <Route path="/setting" element={<Setting />} />
+        </Routes>
+      )}
       {/* <h1 className="text-3xl font-bold underline">Hello from frontend</h1> */}
-      <Routes>
+      {/* <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
@@ -155,7 +174,7 @@ function App() {
         <Route path="/drugs/edit/:id" element={<EditDrug />} />
         <Route path="/drugs/detail/:id" element={<DetailDrug />} />
         <Route path="/setting" element={<Setting />} />
-      </Routes>
+      </Routes> */}
     </div>
   );
 }
