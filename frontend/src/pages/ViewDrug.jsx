@@ -16,7 +16,7 @@ function ViewDrug() {
   useEffect(() => {
     if (userId && userId !== "logout")
       axios
-        .get(`https://hy-server.vercel.app/users/${userId}/drugs`)
+        .get(`https://server.pillbook-hy.com/users/${userId}/drugs`)
         .then((res) => {
           setDrugs(res.data.data.drugs);
         });

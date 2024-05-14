@@ -127,7 +127,7 @@ function CreateDrug({ setIsAddMedicationOpen }) {
     };
     // Create Drug data
     axios
-      .post(`https://hy-server.vercel.app/drugs`, data)
+      .post(`https://server.pillbook-hy.com/drugs`, data)
       .then((res) => {
         console.log("success");
         return res.data.data.drug._id;
@@ -199,7 +199,7 @@ function CreateDrug({ setIsAddMedicationOpen }) {
         logArr.forEach((el) => {
           axios
             .post(
-              `https://hy-server.vercel.app/logs`,
+              `https://server.pillbook-hy.com/logs`,
               {
                 userId,
                 drugId: id,
@@ -212,7 +212,7 @@ function CreateDrug({ setIsAddMedicationOpen }) {
             })
             .then((log) => {
               console.log(log);
-              axios.post(`https://hy-server.vercel.app/schedules`, {
+              axios.post(`https://server.pillbook-hy.com/schedules`, {
                 _id: log._id,
                 expireAt: log.plannedDateTime,
               });

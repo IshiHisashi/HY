@@ -79,7 +79,7 @@ function Home() {
     console.log(userId);
     if (userId && userId !== "logout")
       axios
-        .get(`https://hy-server.vercel.app/users/${userId}/drugs/shortage`)
+        .get(`https://server.pillbook-hy.com/users/${userId}/drugs/shortage`)
         .then((res) => {
           setShortageDrugs(res.data.data.shortageDrugs);
         })
@@ -90,7 +90,7 @@ function Home() {
   useEffect(() => {
     if (userId && userId !== "logout")
       axios
-        .get(`https://hy-server.vercel.app/users/${userId}/logs/underuser`)
+        .get(`https://server.pillbook-hy.com/users/${userId}/logs/underuser`)
         .then((res) => {
           setLogs(res.data.data.logs);
         });
@@ -557,7 +557,7 @@ function TakeLog({
 
   useEffect(() => {
     axios
-      .get(`https://hy-server.vercel.app/drugs/${log.drugId._id}`)
+      .get(`https://server.pillbook-hy.com/drugs/${log.drugId._id}`)
       .then((res) => {
         setRemaining(res.data.data.aDrug.remaining);
       });
@@ -567,7 +567,7 @@ function TakeLog({
     const newRemaining = Number(remaining) - log.drugId.amount;
     console.log(newRemaining);
     axios
-      .patch(`https://hy-server.vercel.app/drugs/${log.drugId._id}`, {
+      .patch(`https://server.pillbook-hy.com/drugs/${log.drugId._id}`, {
         remaining: newRemaining,
       })
       .then(() => {
@@ -579,22 +579,25 @@ function TakeLog({
   const handleSubmitTakenTime = (time) => {
     //update takenDate to the log
     axios
-      .patch(`https://hy-server.vercel.app/logs/${log._id}`, {
+      .patch(`https://server.pillbook-hy.com/logs/${log._id}`, {
         takenDateTime: time,
       })
       .then(() => {
         axios
           .get(
-            `https://hy-server.vercel.app/drugs/${log.drugId._id}/logs/untaken`
+            `https://server.pillbook-hy.com/drugs/${log.drugId._id}/logs/untaken`
           )
           .then((res) => {
             console.log(res.data.data.logs.length);
             // Change the drug status to 'complete' if no log is left further.
             if (res.data.data.logs.length === 0) {
               axios
-                .patch(`https://hy-server.vercel.app/drugs/${log.drugId._id}`, {
-                  status: "complete",
-                })
+                .patch(
+                  `https://server.pillbook-hy.com/drugs/${log.drugId._id}`,
+                  {
+                    status: "complete",
+                  }
+                )
                 .then(() => console.log("completed!"));
             }
           });
@@ -604,7 +607,7 @@ function TakeLog({
       });
     //(record this moment as 'latestTakenDate' in the drug document | to be added but is this really needed??)****
     axios
-      .patch(`https://hy-server.vercel.app/drugs/${log.drugId._id}`, {
+      .patch(`https://server.pillbook-hy.com/drugs/${log.drugId._id}`, {
         latestTakenDate: time,
       })
       .then(console.log(time));

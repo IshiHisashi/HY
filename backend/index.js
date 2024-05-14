@@ -76,6 +76,7 @@ app.use(
       "https://hy-7hyq6d3ye-ishis-projects-a730a12c.vercel.app",
       "https://hy-server.vercel.app",
       "https://hy-front.vercel.app",
+      "https://www.pillbook-hy.com",
     ],
   })
 );
