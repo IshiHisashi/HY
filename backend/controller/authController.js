@@ -134,14 +134,7 @@ export const protect = async (req, res, next) => {
 
 //  Logout
 export const revokeToken = async (req, res) => {
-  console.log(req.cookies);
-  // res.clearCookie("jwt");
-  res.clearCookie("jwt", {
-    path: "/",
-    domain: "hy-server.vercel.app",
-    secure: true,
-    httpOnly: true,
-    sameSite: "None",
-  });
+  console.log("deleting");
+  res.clearCookie("jwt", cookieOptions);
   res.status(200).json({ message: "cookies are deleted" });
 };
