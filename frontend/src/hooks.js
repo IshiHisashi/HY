@@ -45,6 +45,8 @@ const useAuth = () => {
   const logout = () => {
     setUserId("logout");
     axios.delete("https://hy-server.vercel.app/users/revoke_token");
+    document.cookie =
+      "jwt=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=None";
   };
 
   return { userId, setUserId, signup, getUser, login, logout };

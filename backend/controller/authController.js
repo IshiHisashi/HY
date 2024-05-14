@@ -9,16 +9,17 @@ const signToken = (id) => {
   });
 };
 
+const cookieOptions = {
+  expires: new Date(
+    Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 3600 * 1000
+  ),
+  httpOnly: true,
+  secure: true,
+  sameSite: "None",
+};
+
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
-  const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 3600 * 1000
-    ),
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-  };
 
   //   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
@@ -49,7 +50,7 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res, next) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     const { email, password } = req.body;
     //   1) Check if email and password exists
     if (!email || !password) {
@@ -64,11 +65,7 @@ export const login = async (req, res, next) => {
 
     //   3) If everyighing is ok, send token to client
     createSendToken(user, 200, res);
-
-    // res.status(200).json({
-    //   status: "success",
-    //   token,
-    // });
+    console.log("doing login");
   } catch (err) {
     console.log(err);
     res.status(400).json({
@@ -137,6 +134,14 @@ export const protect = async (req, res, next) => {
 
 //  Logout
 export const revokeToken = async (req, res) => {
-  res.clearCookie("jwt");
+  console.log(req.cookies);
+  // res.clearCookie("jwt");
+  res.clearCookie("jwt", {
+    path: "/",
+    domain: "hy-server.vercel.app",
+    secure: true,
+    httpOnly: true,
+    sameSite: "None",
+  });
   res.status(200).json({ message: "cookies are deleted" });
 };
