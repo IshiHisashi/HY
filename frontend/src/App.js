@@ -58,7 +58,7 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 // SW
-if ("serviceWorker" in navigator) {
+if ("Notification" in window && "serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("../firebase-messaging-sw.js")
     .then(function (registration) {
@@ -129,14 +129,18 @@ function App() {
   // Notification
 
   function requestPermission(userId) {
-    Notification.requestPermission().then((permission) => {
-      if (permission === "granted") {
-        console.log("Notification permission granted.");
-        // insert fnc
-        save(userId);
-        // insert end
-      }
-    });
+    if ("Notification" in window) {
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          console.log("Notification permission granted.");
+          // insert fnc
+          save(userId);
+          // insert end
+        }
+      });
+    } else {
+      console.log("this browser does not support notifications");
+    }
   }
   requestPermission(userId);
 

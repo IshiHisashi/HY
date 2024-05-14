@@ -81,7 +81,6 @@ function Home() {
       axios
         .get(`https://hy-server.vercel.app/users/${userId}/drugs/shortage`)
         .then((res) => {
-          console.log(res.data.data.shortageDrugs);
           setShortageDrugs(res.data.data.shortageDrugs);
         })
         .catch(setShortageDrugs(null));
@@ -93,7 +92,6 @@ function Home() {
       axios
         .get(`https://hy-server.vercel.app/users/${userId}/logs/underuser`)
         .then((res) => {
-          console.log(res.data.data.logs);
           setLogs(res.data.data.logs);
         });
   }, [userId]);
@@ -272,12 +270,12 @@ function Home() {
             />
           ))}
         </ul>
-        <Link to="/signup">!! SignUp from here !!</Link>
+        {/* <Link to="/signup">!! SignUp from here !!</Link>
         <br></br>
         <Link to="/login">!! Login from here !!</Link>
         <br></br>
         <Link to="/logout">!! Logout from here !!</Link>
-        <br></br>
+        <br></br> */}
       </div>
       {/* </div> */}
       <div

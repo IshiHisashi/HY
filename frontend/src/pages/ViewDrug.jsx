@@ -81,7 +81,7 @@ function ViewDrug() {
           ))}
         </ul>
         <div
-          className="btn-add-med absolute bottom-[100px] right-4 flex w-14 h-14 bg-primary-700 rounded-[1000px] cursor-pointer"
+          className="btn-add-med fixed bottom-[100px] right-4 flex w-14 h-14 bg-primary-700 rounded-[1000px] cursor-pointer"
           onClick={handleShowAddMedication}
         >
           <p className="self-center translate-y-[-5%]	 text-white font-semibokd text-[32px] rounded-[1px] mx-auto">
