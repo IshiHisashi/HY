@@ -21,10 +21,12 @@ function Setting() {
   // Read user info
   useEffect(() => {
     if (userId) {
-      axios.get(`https://hy-server.vercel.app/users/${userId}`).then((res) => {
-        console.log(res);
-        setUser(res.data.data.user);
-      });
+      axios
+        .get(`https://server.pillbook-hy.com/users/${userId}`)
+        .then((res) => {
+          console.log(res);
+          setUser(res.data.data.user);
+        });
     }
   }, [userIdObj]);
 
@@ -129,7 +131,7 @@ function Notification({ user, userId }) {
     setreminder(!reminder);
     console.log(userId);
     axios
-      .patch(`https://hy-server.vercel.app/users/${userId}`, {
+      .patch(`https://server.pillbook-hy.com/users/${userId}`, {
         reminder: !reminder,
       })
       .then(() => console.log("success"));
@@ -182,7 +184,7 @@ function Profile({ user, userId }) {
       dateofbirth,
     };
     axios
-      .patch(`https://hy-server.vercel.app/users/${userId}`, data)
+      .patch(`https://server.pillbook-hy.com/users/${userId}`, data)
       .then(() => console.log("success"));
   };
 

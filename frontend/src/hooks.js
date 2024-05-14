@@ -8,7 +8,7 @@ const useAuth = () => {
 
   const signup = async (data) => {
     try {
-      await axios.post("https://hy-server.vercel.app/users/signup", data);
+      await axios.post("https://server.pillbook-hy.com/users/signup", data);
       await getUser();
     } catch (error) {
       console.log(error);
@@ -18,7 +18,7 @@ const useAuth = () => {
   // login
   const login = async (data) => {
     try {
-      await axios.post("https://hy-server.vercel.app/users/login", data);
+      await axios.post("https://server.pillbook-hy.com/users/login", data);
       await getUser();
       console.log("loggedin");
     } catch (error) {
@@ -31,7 +31,7 @@ const useAuth = () => {
     try {
       axios.defaults.withCredentials = true;
       const response = await axios.get(
-        "https://hy-server.vercel.app/users/loggedinuser"
+        "https://server.pillbook-hy.com/users/loggedinuser"
       );
       const id = response.data.id;
       // console.log(id);
@@ -44,7 +44,7 @@ const useAuth = () => {
 
   const logout = () => {
     setUserId("logout");
-    axios.delete("https://hy-server.vercel.app/users/revoke_token");
+    axios.delete("https://server.pillbook-hy.com/users/revoke_token");
     document.cookie =
       "jwt=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=None";
   };
