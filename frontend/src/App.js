@@ -57,8 +57,14 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
+// Detect iOS
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+console.log(isIOS());
+
 // SW
-if ("Notification" in window && "serviceWorker" in navigator) {
+if (!isIOS() && "Notification" in window && "serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("../firebase-messaging-sw.js")
     .then(function (registration) {
@@ -129,7 +135,7 @@ function App() {
   // Notification
 
   function requestPermission(userId) {
-    if ("Notification" in window) {
+    if (!isIOS() && "Notification" in window) {
       Notification.requestPermission().then((permission) => {
         if (permission === "granted") {
           console.log("Notification permission granted.");
