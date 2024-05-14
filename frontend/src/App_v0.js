@@ -56,30 +56,20 @@ function urlBase64ToUint8Array(base64String) {
   }
   return outputArray;
 }
-
+// Notification
 // SW
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("../firebase-messaging-sw.js")
     .then(function (registration) {
       console.log("Registration successful, scope is:", registration.scope);
-      registration.update();
       return navigator.serviceWorker.ready;
     })
     .then(function (registration) {
       console.log("ok up until this point");
       // Now that the Service Worker is ready, proceed to subscribe the user
-      const applicationServerKey = urlBase64ToUint8Array(vapidKey);
 
-      // reload until service worker take controll the page
-      console.log(navigator.serviceWorker.controller);
-      if (navigator.serviceWorker.controller) {
-        console.log("Service Worker is active and controlling the page.");
-      } else {
-        console.log("Service Worker is not controlling the page.");
-        window.location.reload();
-      }
-      // Then, subscribe
+      const applicationServerKey = urlBase64ToUint8Array(vapidKey);
       return registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: applicationServerKey,
@@ -88,15 +78,10 @@ if ("serviceWorker" in navigator) {
     .then(function (subscription) {
       console.log("User is subscribed:", subscription);
     })
-    .then(function () {
-      console.log("permission requested");
-    })
     .catch(function (err) {
       console.log("Service worker registration failed, error:", err);
-      window.location.reload();
     });
 }
-
 async function save(userId) {
   console.log(userId);
   const fcm_token = await getToken(messaging, {
@@ -118,6 +103,19 @@ export const fcm_token = await getToken(messaging, {
 });
 console.log(fcm_token);
 
+// export function requestPermission(userId) {
+//   // console.log("Requesting permission...");
+//   Notification.requestPermission().then((permission) => {
+//     if (permission === "granted") {
+//       console.log("Notification permission granted.");
+//       // insert fnc
+//       save(userId);
+//       // insert end
+//     }
+//   });
+// }
+// requestPermission();
+
 // ----------------------------------------------------
 
 // Routing
@@ -126,8 +124,6 @@ function App() {
   const userId = userIdObj.userId;
   // const [userId, setUserId] = useState(userIdObj.userId);
   console.log(userId);
-
-  // Notification
 
   function requestPermission(userId) {
     Notification.requestPermission().then((permission) => {
