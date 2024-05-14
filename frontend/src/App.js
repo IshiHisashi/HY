@@ -34,9 +34,15 @@ const firebaseConfig = {
   measurementId: "G-DWP00DV9NB",
 };
 
+// Detect iOS
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+console.log(isIOS());
+
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const messaging = await getMessaging(app);
+const app = !isIOS() && initializeApp(firebaseConfig);
+const messaging = !isIOS() && getMessaging(app);
 //
 
 const vapidKey =
@@ -56,12 +62,6 @@ function urlBase64ToUint8Array(base64String) {
   }
   return outputArray;
 }
-
-// Detect iOS
-function isIOS() {
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-}
-console.log(isIOS());
 
 // SW
 if (!isIOS() && "Notification" in window && "serviceWorker" in navigator) {
@@ -119,9 +119,11 @@ async function save(userId) {
   });
 }
 
-export const fcm_token = await getToken(messaging, {
-  vapidKey,
-});
+export const fcm_token =
+  !isIOS() &&
+  (await getToken(messaging, {
+    vapidKey,
+  }));
 console.log(fcm_token);
 
 // ----------------------------------------------------
