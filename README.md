@@ -20,28 +20,28 @@
 </ul>
 
 ## Demo
-### Video
-<p>(Please click below thumbnail then you'll be navigated to youtube link)</p>
 
-[![](https://img.youtube.com/vi/HOvOjbfgq40/0.jpg)](https://www.youtube.com/watch?v=HOvOjbfgq40)
 
 ### Screenshots
 <table>
   <thead>
-    <th>Select Location</th>
-    <th>Add Items</th>
-    <th>Order Tracing</th>
-    <th>View Storage</th>
-    <th>Driver's end</th>
-  </thead>
+    <th>Task list</th>
+    <th>Taking log</th>
+    <th>Add medication</th>
+    <th>Medication list</th>
+    <th>Medication details</th>
+     </thead>
   <tr>
-    <td valign="top"><img src=https://github.com/IshiHisashi/Stash-Away/blob/main/UserEnd/images/SelectLocation_ReadMe_m.png width=150/></td>
-    <td valign="top"><img src=https://github.com/IshiHisashi/Stash-Away/blob/main/UserEnd/images/AddItem_ReadMe_m.png width=150/></td>
-    <td valign="top"><img src=https://github.com/IshiHisashi/Stash-Away/blob/main/UserEnd/images/OrderTracing_ReadMe_m.png width=150/></td>
-    <td valign="top"><img src=https://github.com/IshiHisashi/Stash-Away/blob/main/UserEnd/images/ViewStorage_ReadMe_m.png width=150/></td>
-    <td valign="top"><img src=https://github.com/IshiHisashi/Stash-Away/blob/main/UserEnd/images/Driver_ReadMe_m.png width=150/></td>
+    <td valign="top"><img src=https://github.com/IshiHisashi/hy/blob/main/frontend/public/images/screen/Task%20list.png width=150/></td>
+    <td valign="top"><img src=https://github.com/IshiHisashi/hy/blob/main/frontend/public/images/screen/Take%20log.png width=150/></td>
+    <td valign="top"><img src=https://github.com/IshiHisashi/hy/blob/main/frontend/public/images/screen/Add%20medication.png width=150/></td>
+    <td valign="top"><img src=https://github.com/IshiHisashi/hy/blob/main/frontend/public/images/screen/Medication%20list.png width=150/></td>
+    <td valign="top"><img src=https://github.com/IshiHisashi/hy/blob/main/frontend/public/images/screen/Medication%20detail.png width=150/></td>
   </tr>
 </table>
+
+### Video
+<p>Coming soon</p>
 
 ## Directory Structure
 <table>
