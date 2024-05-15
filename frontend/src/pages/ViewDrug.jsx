@@ -44,7 +44,7 @@ function ViewDrug() {
           )}
         </header>
 
-        <nav>
+        {/* <nav>
           <div className="cards flex gap-2 mt-4">
             <p
               className={`text-[11px] font-medium py-1.5 px-3 rounded-[18px] inline-block text-primary-700  bg-primary-200`}
@@ -77,7 +77,7 @@ function ViewDrug() {
               Suppliment
             </p>
           </div>
-        </nav>
+        </nav> */}
 
         <ul className="flex flex-col gap-y-2 mt-4">
           {drugs.map((drug) => (
@@ -102,7 +102,7 @@ function ViewDrug() {
             onClick={handleModalClose}
           ></div>
           <div className="px-4 bg-white rounded-t-2xl h-[98vh] overflow-scroll w-full fixed bottom-0 z-20">
-            <AddDrug />
+            <AddDrug setIsAddMedicationOpen={setIsAddMedicationOpen} />
           </div>
         </>
       ) : (
