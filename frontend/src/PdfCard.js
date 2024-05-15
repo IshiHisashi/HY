@@ -6,7 +6,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import DrugFile from "./drugFile.js";
 import { drugs } from "./pages/ViewDrug.jsx";
 
-const PdfCard = ({ title, drugs }) => {
+const PdfCard = ({ title, drugs, userId }) => {
   const styles = {
     container: {
       width: "220px",
@@ -38,10 +38,11 @@ const PdfCard = ({ title, drugs }) => {
   return (
     <>
       <PDFDownloadLink
-        document={<DrugFile drugs={drugs} />}
+        document={<DrugFile drugs={drugs} userId={userId} />}
         fileName="drug_file.pdf"
         className="absolute top-4 right-4 scale-150	"
       >
+        {console.log(drugs)}
         {/* <div style={styles.btn}> */}
         <button>
           {" "}

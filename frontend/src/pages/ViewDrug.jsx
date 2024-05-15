@@ -37,7 +37,11 @@ function ViewDrug() {
           <h1 className="ont-semibold text-lg text-center font-bold">
             Medication List
           </h1>
-          {userId && userId !== "logout" ? <PdfCard drugs={drugs} /> : ""}
+          {userId && userId !== "logout" ? (
+            <PdfCard drugs={drugs} userId={userId} />
+          ) : (
+            ""
+          )}
         </header>
 
         <nav>
