@@ -35,10 +35,11 @@ const SignUp = ({ email, password, setSignup }) => {
   };
 
   const handleProgessDec = () => {
-    if (progress === 3) {
-      setReminderRefister(false);
+    if (progress === 1) {
+      setSignup(false);
+    } else {
+      setProgress((progress) => progress - 1);
     }
-    setProgress((progress) => progress - 1);
   };
   // name
   useEffect(() => {
@@ -107,15 +108,13 @@ const SignUp = ({ email, password, setSignup }) => {
 
   return (
     <>
-      <header className="mt-2.5">
+      <header className="mt-2.5 relative">
         <h1 className="font-semibold text-lg text-center">Create Profile</h1>
-        {progress > 1 ? (
-          <button onClick={(progress) => handleProgessDec(progress)}>
-            Previous
-          </button>
-        ) : (
-          ""
-        )}
+        <img
+          src="./images/arrow_back_ios.png"
+          className="absolute w-6 h-6 top-[50%] left-4 translate-y-[-55%] cursor-pointer"
+          onClick={(progress) => handleProgessDec(progress)}
+        />
       </header>
       {/* This will become "Name component" */}
       {progress === 1 ? (

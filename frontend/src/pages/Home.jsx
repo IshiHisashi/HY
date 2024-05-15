@@ -466,7 +466,7 @@ function LogDetails({
 
   return (
     <>
-      <div className="logDetailCard bg-white rounded-lg	z-20 fixed w-full top-1/4">
+      <div className="logDetailCard bg-white rounded-lg	z-20 fixed w-[calc(100%-32px)] top-1/4">
         <header className="relative card-header bg-primary-100 rounded-lg h-[52px]">
           <img
             src="/images/Info Square.png"

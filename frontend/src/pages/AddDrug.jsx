@@ -1555,7 +1555,7 @@ function ReminderRegister({
               className="modal fixed z-10 top-0 left-0 bg-gray-800 opacity-80 w-full h-[120%]"
               onClick={handleModalClose}
             ></div>
-            <div className="px-4 bg-white rounded-t-2xl	 w-full h-[341px] fixed bottom-0 z-20">
+            <div className="px-4 bg-white rounded-t-2xl	 w-[calc(100%-32px)] h-[341px] fixed bottom-0 z-20">
               <img
                 className="mt-[35px] w-[189px] mx-auto"
                 src="/images/undraw_collecting_re_lp6p 1.png"
