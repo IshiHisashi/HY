@@ -26,7 +26,7 @@
 <table>
   <thead>
     <th>Task list</th>
-    <th>Taking log</th>
+    <th>Take log</th>
     <th>Add medication</th>
     <th>Medication list</th>
     <th>Medication details</th>
