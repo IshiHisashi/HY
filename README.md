@@ -65,7 +65,7 @@
 <p>Then, please create your account or try this sample account</p>
 <pre>
   <code>
-    Email : stashaway.wmddproject@gmail.com
+    Email : pillbook_test@gmail.com
     Password : samplepass
   </code>
 </pre>
@@ -104,9 +104,10 @@
       <td>Full-stack developer</td>
   </tr>
   <tr>
-    <td><img  target="_blank"src=https://github.com/IshiHisashi/Stash-Away/blob/main/UserEnd/images/Prathibha_prof.png height=50></td>
+    <td><img  target="_blank"src=https://github.com/IshiHisashi/hy/blob/main/frontend/public/images/portrait_yk.jpg height=50></td>
     <td>Yuriko Kikuchi</td>
-    <td><a target="_blank" href=https://github.com/shehani-wijetunga>@shehani-wijetunga</td>
+<!--     <td><a target="_blank" href=#>-</td> -->
+    <td><p style='center'>-</p></td>
     <td>UI UX Designer</td>
   </tr>
 </table>
