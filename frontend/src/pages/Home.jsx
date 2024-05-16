@@ -73,6 +73,17 @@ function Home() {
 
   // Date search_corresponding logs are contained in the following array
   let logDateArr = [];
+  // to specify logs for specific date
+  const LogsForDate = (date, logs) => {
+    logDateArr = [];
+    logs.forEach((el) => {
+      const planDate = new Date(el.plannedDateTime);
+      if (planDate.toDateString() === date.toDateString()) {
+        logDateArr.push(el);
+      }
+    });
+    setLogsDate(logDateArr);
+  };
 
   // Read Drug Data
   useEffect(() => {
@@ -93,21 +104,18 @@ function Home() {
         .get(`https://server.pillbook-hy.com/users/${userId}/logs/underuser`)
         .then((res) => {
           setLogs(res.data.data.logs);
+          return res.data.data.logs;
+        })
+        .then((logs) => {
+          LogsForDate(new Date(), logs);
         });
   }, [userId]);
 
   // Click a date card
   const handleClickDate = (date) => {
     setSelectedDate(date);
-    logDateArr = [];
-    logs.forEach((el) => {
-      const planDate = new Date(el.plannedDateTime);
-      if (planDate.toDateString() === date.toDateString()) {
-        logDateArr.push(el);
-      }
-    });
-    setLogsDate(logDateArr);
     setDefaultToday(false);
+    LogsForDate(date, logs);
   };
 
   // Showup the modal for add medication
@@ -206,7 +214,7 @@ function Home() {
                 onClick={() => handleClickDate(date)}
               />
               <div
-                className={`w-10 h-[63px]   rounded-md pt-[11px]  ${
+                className={`w-10 h-[63px] rounded-md pt-[11px]  ${
                   date.toDateString() === today.toDateString() && defaultToday
                     ? "bg-primary-700 text-gray-50"
                     : ""
@@ -270,12 +278,6 @@ function Home() {
             />
           ))}
         </ul>
-        {/* <Link to="/signup">!! SignUp from here !!</Link>
-        <br></br>
-        <Link to="/login">!! Login from here !!</Link>
-        <br></br>
-        <Link to="/logout">!! Logout from here !!</Link>
-        <br></br> */}
       </div>
       {/* </div> */}
       <div
@@ -343,11 +345,13 @@ function Log({ log, isModalOpen, setIsModalOpen }) {
   return (
     <>
       <div
-        className="w-full mx-4 bg-white p-4 rounded grid grid-cols-[1fr_auto]"
+        className="w-full bg-white p-4 rounded grid grid-cols-[1fr_auto]"
         onClick={handleClickLog}
       >
         <div className="drug-details">
-          {takenTime ? (
+          {takenTime?.split("-")[0] === "1970" ? (
+            <p className="text-[11px] text-primary-700 font-medium">skipped</p>
+          ) : takenTime ? (
             <p className="text-[11px] text-primary-700 font-medium">
               Taken at {hoursTaken} : {minutestaken} {ampmTaken},
               {dateTaken.split(" ")[1]} {dateTaken.split(" ")[2]}
@@ -413,21 +417,6 @@ function Log({ log, isModalOpen, setIsModalOpen }) {
       ) : (
         ""
       )}
-      {/* {openLog === log.drugId.drugName && !takenTime ? (
-        <LogDetails
-          log={log}
-          date={date}
-          hoursPlan={hoursPlan}
-          minutesPlan={minutesPlan}
-          ampmPlan={ampmPlan}
-          frequencyDay={frequencyDay}
-          frequencyWithinADay={frequencyWithinADay}
-          setIsModalOpen={setIsModalOpen}
-          setOpenLog={setOpenLog}
-        />
-      ) : (
-        ""
-      )} */}
     </>
   );
 }
@@ -456,6 +445,47 @@ function LogDetails({
     } else {
       setTake("");
     }
+  };
+
+  const handleSubmitTakenTime = (time) => {
+    //update takenDate to the log
+    axios
+      .patch(`https://server.pillbook-hy.com/logs/${log._id}`, {
+        takenDateTime: time,
+      })
+      .then(() => {
+        axios
+          .get(
+            `https://server.pillbook-hy.com/drugs/${log.drugId._id}/logs/untaken`
+          )
+          .then((res) => {
+            console.log(res.data.data.logs.length);
+            // Change the drug status to 'complete' if no log is left further.
+            if (res.data.data.logs.length === 0) {
+              axios
+                .patch(
+                  `https://server.pillbook-hy.com/drugs/${log.drugId._id}`,
+                  {
+                    status: "complete",
+                  }
+                )
+                .then(() => console.log("completed!"));
+            }
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    axios
+      .patch(`https://server.pillbook-hy.com/drugs/${log.drugId._id}`, {
+        latestTakenDate: time,
+      })
+      .then(console.log(time));
+
+    // Clear modals
+    setIsModalOpen(false);
+    setOpenLog(false);
+    setIsLogDetailsModalOpen(false);
   };
 
   const handleClickModalClose = () => {
@@ -513,7 +543,12 @@ function LogDetails({
           <button className="w-full text-primary-700 border-2 border-primary-700 font-bold text-[15px] rounded-[24px] h-[48px]">
             Reschedule
           </button>
-          <button className="w-full text-[15px] h-[48px]">Skip</button>
+          <button
+            className="w-full text-[15px] h-[48px] pb-4"
+            onClick={() => handleSubmitTakenTime(new Date(0))}
+          >
+            Skip
+          </button>
         </div>
       </div>
       {isLogDetailsModalOpen ? (
@@ -528,17 +563,18 @@ function LogDetails({
         <TakeLog
           log={log}
           setTake={setTake}
+          setTime={setTime}
           setSetTime={setSetTime}
           handleClickTake={handleClickTake}
           isLogDetailsModalOpen={isLogDetailsModalOpen}
           setIsLogDetailsModalOpen={setIsLogDetailsModalOpen}
           setIsModalOpen={setIsModalOpen}
           setOpenLog={setOpenLog}
+          handleSubmitTakenTime={handleSubmitTakenTime}
         />
       ) : (
         ""
       )}
-      {setTime ? <SetTimeLog log={log} /> : ""}
     </>
   );
 }
@@ -546,12 +582,14 @@ function LogDetails({
 function TakeLog({
   log,
   setTake,
+  setTime,
   setSetTime,
   handleClickTake,
   isLogDetailsModalOpen,
   setIsLogDetailsModalOpen,
   setIsModalOpen,
   setOpenLog,
+  handleSubmitTakenTime,
 }) {
   const [remaining, setRemaining] = useState("");
 
@@ -576,103 +614,121 @@ function TakeLog({
       });
   };
 
-  const handleSubmitTakenTime = (time) => {
-    //update takenDate to the log
-    axios
-      .patch(`https://server.pillbook-hy.com/logs/${log._id}`, {
-        takenDateTime: time,
-      })
-      .then(() => {
-        axios
-          .get(
-            `https://server.pillbook-hy.com/drugs/${log.drugId._id}/logs/untaken`
-          )
-          .then((res) => {
-            console.log(res.data.data.logs.length);
-            // Change the drug status to 'complete' if no log is left further.
-            if (res.data.data.logs.length === 0) {
-              axios
-                .patch(
-                  `https://server.pillbook-hy.com/drugs/${log.drugId._id}`,
-                  {
-                    status: "complete",
-                  }
-                )
-                .then(() => console.log("completed!"));
-            }
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    //(record this moment as 'latestTakenDate' in the drug document | to be added but is this really needed??)****
-    axios
-      .patch(`https://server.pillbook-hy.com/drugs/${log.drugId._id}`, {
-        latestTakenDate: time,
-      })
-      .then(console.log(time));
-
-    // Calculate remaining
-    UpdateRemining();
-    // Clear modals
-    setIsModalOpen(false);
-    setOpenLog(false);
-    setIsLogDetailsModalOpen(false);
-  };
-
   // **WIll implement later** //
   const handleSetTakenTime = () => {
-    setTake("");
-    setSetTime("select");
-    // Calculate remaining
-    UpdateRemining();
+    setSetTime(!setTime);
   };
 
   return (
     <>
-      <div className="bg-white mx-[-16px] mt-4  px-4 pb-4 rounded-t-2xl	text-center fixed z-40 w-full bottom-0">
-        <h4 className="pt-[28px] text-[18.98px] text-gray-950 font-bold">
-          When did you take the med?
-        </h4>
-        <ul className="flex flex-col mt-6 gap-y-2.5">
-          <button
-            className="text-[16.88px] text-primary-700 font-semibold h-[52px] w-full border-2 border-gray-400 rounded-md	"
-            onClick={() => handleSubmitTakenTime(new Date())}
-          >
-            Now
-          </button>
-          <button
-            className="text-[16.88px] text-primary-700 font-semibold h-[52px] w-full border-2 border-gray-400 rounded-md	"
-            onClick={() => handleSubmitTakenTime(log.plannedDateTime)}
-          >
-            On time
-          </button>
-          <button
-            className="text-[16.88px] text-primary-700 font-semibold h-[52px] w-full border-2 border-gray-400 rounded-md	"
-            onClick={() => handleSetTakenTime()}
-          >
-            Set Time
-          </button>
-          <button className="text-[15px]" onClick={handleClickTake}>
-            Cancel
-          </button>
-        </ul>
+      <div className="bg-white mx-[-16px] mt-4  px-4 pb-4 rounded-t-2xl	text-center fixed z-40 w-full h-[300px] bottom-0">
+        <div>
+          <h4 className="pt-[28px] text-[18.98px] text-gray-950 font-bold">
+            {setTime
+              ? "Enter actual time you took the drug"
+              : "When did you take the med?"}
+          </h4>
+          {setTime ? (
+            <SetTimeLog
+              log={log}
+              setSetTime={setSetTime}
+              setTake={setTake}
+              setIsModalOpen={setIsModalOpen}
+              setOpenLog={setOpenLog}
+              handleSubmitTakenTime={handleSubmitTakenTime}
+              UpdateRemining={UpdateRemining}
+            />
+          ) : (
+            <ul className="flex flex-col mt-6 gap-y-2.5">
+              <button
+                className="text-[16.88px] text-primary-700 font-semibold h-[52px] w-full border-2 border-gray-400 rounded-md	"
+                onClick={() => handleSubmitTakenTime(new Date())}
+              >
+                Now
+              </button>
+              <button
+                className="text-[16.88px] text-primary-700 font-semibold h-[52px] w-full border-2 border-gray-400 rounded-md	"
+                onClick={() => handleSubmitTakenTime(log.plannedDateTime)}
+              >
+                On time
+              </button>
+              <button
+                className="text-[16.88px] text-primary-700 font-semibold h-[52px] w-full border-2 border-gray-400 rounded-md	"
+                onClick={() => handleSetTakenTime()}
+              >
+                Set Time
+              </button>
+
+              <button className="text-[15px]" onClick={handleClickTake}>
+                Cancel
+              </button>
+            </ul>
+          )}
+        </div>
       </div>
     </>
   );
 }
 
-function SetTimeLog({ log }) {
-  const [actualTime, setActualTime] = useState("");
+function SetTimeLog({
+  log,
+  setSetTime,
+  setTake,
+  setIsModalOpen,
+  setOpenLog,
+  handleSubmitTakenTime,
+  UpdateRemining,
+}) {
+  const [date, setDate] = useState("");
+  const [hourmin, setHourmin] = useState("");
+  // const [actualTime, setActualTime] = useState("");
+
+  const [hour, min] = hourmin?.split(":");
+  const actualtimeH = new Date(date).setHours(
+    new Date(date).getHours() + Number(hour)
+  );
+  const actualtime = new Date(actualtimeH).setMinutes(Number(min));
+
   const handleSubmitActualTime = () => {
-    console.log(actualTime);
+    // register the log
+    handleSubmitTakenTime(new Date(actualtime));
+    // close all
+    setSetTime(false);
+    setTake(false);
+    //  remining record
+    UpdateRemining();
   };
+
   return (
-    <>
-      <label>Enter actual time you took the drug</label>
-      <input onChange={(e) => setActualTime(e.target.value)} />
-      <button onClick={() => handleSubmitActualTime()}>Submit</button>
-    </>
+    <div className="py-12 px-4 flex flex-col gap-8">
+      <div className="flex gap-4">
+        <input
+          type="date"
+          className="border-gray-400 border-2 px-4 py-2 mx-auto rounded-md w-full"
+          onChange={(e) => setDate(e.target.value)}
+        />
+        <input
+          type="text"
+          className="border-gray-400 border-2 px-4 py-2 mx-auto rounded-md w-full"
+          placeholder="e.g. 13:00"
+          onChange={(e) => setHourmin(e.target.value)}
+        />
+      </div>
+      <div className="flex flex-col gap-4">
+        <button
+          className="w-full text-white font-bold text-[15px] bg-primary-700 rounded-[24px] h-[48px]"
+          onClick={() => handleSubmitActualTime()}
+        >
+          Submit
+        </button>
+        <a
+          className="inline-block cursor-pointer"
+          onClick={() => setSetTime(false)}
+        >
+          Back
+        </a>
+      </div>
+    </div>
   );
 }
 

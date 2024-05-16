@@ -38,7 +38,7 @@ const firebaseConfig = {
 function isIOS() {
   return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 }
-console.log(isIOS());
+// console.log(isIOS());
 
 // Initialize Firebase
 const app = !isIOS() && initializeApp(firebaseConfig);
@@ -73,7 +73,6 @@ if (!isIOS() && "Notification" in window && "serviceWorker" in navigator) {
       return navigator.serviceWorker.ready;
     })
     .then(function (registration) {
-      console.log("ok up until this point");
       // Now that the Service Worker is ready, proceed to subscribe the user
       const applicationServerKey = urlBase64ToUint8Array(vapidKey);
 

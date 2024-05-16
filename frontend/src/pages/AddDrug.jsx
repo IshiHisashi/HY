@@ -1148,16 +1148,12 @@ function ScheduleRegister({
             </div>
             {doze1open ? (
               <div id="doze_1" className="form mx-4 mt-[58px]">
-                <p>Will implement later_doze1 Now</p>
                 <input
                   type="text"
-                  className="border-2 border-primary-700"
+                  className="border-2 border-gray-400 px-4 py-2 rounded-[10px]"
+                  placeholder="e.g.13:00"
                   onChange={(e) => setDoze_1(e.target.value)}
                 />
-
-                {/* Exp : slicer here */}
-                <Timeslider />
-
                 <div className="next_name mt-[224px]">
                   <button
                     className="mt-10 text-base text-gray-50 font-semibold	 rounded-3xl bg-primary-700 w-full h-12"
@@ -1172,10 +1168,10 @@ function ScheduleRegister({
             )}
             {doze2open ? (
               <div id="doze_2" className="form mx-4 mt-[58px]">
-                <p>Will implement later_doze2</p>
                 <input
                   type="text"
-                  className="border-2 border-primary-700"
+                  className="border-2 border-gray-400 px-4 py-2 rounded-[10px]"
+                  placeholder="e.g.13:00"
                   onChange={(e) => setDoze_2(e.target.value)}
                 />
                 <div className="next_name mt-[224px]">
@@ -1192,10 +1188,10 @@ function ScheduleRegister({
             )}
             {doze3open ? (
               <div id="doze_3" className="form mx-4 mt-[58px]">
-                <p>Will implement later_doze3</p>
                 <input
                   type="text"
-                  className="border-2 border-primary-700"
+                  className="border-2 border-gray-400 px-4 py-2 rounded-[10px]"
+                  placeholder="e.g.13:00"
                   onChange={(e) => setDoze_3(e.target.value)}
                 />
                 <div className="next_name mt-[224px]">
@@ -1224,10 +1220,9 @@ function ScheduleRegister({
               <p className="text-base mt-3">Do you schedule it? </p>
             </div>
             <div className="form mx-4 mt-[58px]">
-              <p>Start day will be here</p>
               <input
                 type="date"
-                className="border-2 border-primary-700"
+                className="border-2 border-gray-400 px-4 py-2 rounded-[10px]"
                 onChange={(e) => setStartDate(e.target.value)}
               />
               <div className="next_name mt-[224px]">
@@ -1310,10 +1305,9 @@ function ScheduleRegister({
               </p>
             </div>
             <div className="form mx-4 mt-[58px]">
-              <p>End day will be here</p>
               <input
                 type="date"
-                className="border-2 border-primary-700"
+                className="border-2 border-gray-400 px-4 py-2 rounded-[10px]"
                 onChange={(e) => setEndDate(e.target.value)}
               />
               <div className="next_name mt-[224px]">
