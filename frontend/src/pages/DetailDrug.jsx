@@ -9,6 +9,7 @@ function ShowDrug() {
   const [updateOpen, setUpdateOpen] = useState(false);
   const [addedAmount, setAddedAmount] = useState("");
   const [updateSignal, setUpdateSignal] = useState(false);
+  const [closestUntaken, setClosestUntaken] = useState("");
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -22,11 +23,29 @@ function ShowDrug() {
   // for modal control (delete)
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Date handling
+  const utcStart = new Date(drug.takein?.startDate);
+  const utcEnd = new Date(drug.takein?.endDate);
+  const utcUntaken = closestUntaken ? new Date(closestUntaken) : "";
+  const utcLast = new Date(drug.latestTakenDate);
+  console.log(utcLast);
+  const localStart = new Date(
+    utcStart.getTime() + utcStart.getTimezoneOffset() * 60000
+  );
+  const localEnd = new Date(
+    utcEnd.getTime() + utcEnd.getTimezoneOffset() * 60000
+  );
+  const localUntaken = closestUntaken
+    ? new Date(utcUntaken.getTime() + utcUntaken.getTimezoneOffset() * 60000)
+    : "";
+  const localLast = new Date(
+    utcLast.getTime() + utcLast.getTimezoneOffset() * 60000
+  );
+
   const status = drug.status;
   const typeOfDrug = drug.typeOfDrug;
   const frequencyDay = drug.takein?.frequencyDay;
   const frequencyWithinADay = drug.takein?.frequencyWithinADay;
-  const [closestUntaken, setClosestUntaken] = useState("");
 
   useEffect(() => {
     axios
@@ -68,7 +87,6 @@ function ShowDrug() {
           const closestOne = planedTimeArr.reduce((acc, val) => {
             return acc < val ? acc : val;
           });
-          console.log(closestOne);
           setClosestUntaken(closestOne);
         }
       });
@@ -226,21 +244,23 @@ function ShowDrug() {
                 <p className="text-base">{drug.takein?.doze_3 || "-"}</p>
                 <p className="text-[13.33px]"> Last Took</p>
                 <p className="text-base">
-                  {drug.lastTakenDate || "Untaken yet"}
+                  {drug.latestTakenDate
+                    ? utcLast.toLocaleString()
+                    : "Untaken yet"}
                 </p>
                 <p className="text-[13.33px]">Next Take</p>
                 <p className="text-base">
-                  {closestUntaken
-                    ? new Date(closestUntaken).toLocaleString()
+                  {localUntaken
+                    ? new Date(localUntaken).toLocaleString()
                     : "No upcoming take"}
                 </p>
                 <p className="text-[13.33px]">Start Day</p>
                 <p className="text-base">
-                  {new Date(drug.takein?.startDate).toLocaleString()}
+                  {new Date(localStart).toLocaleString().split(",")[0]}
                 </p>
                 <p className="text-[13.33px]">End Day</p>
                 <p className="text-base">
-                  {new Date(drug.takein?.endDate).toLocaleString()}
+                  {new Date(localEnd).toLocaleString().split(",")[0]}
                 </p>
               </div>
             </div>
