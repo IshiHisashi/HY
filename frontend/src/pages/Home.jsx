@@ -329,14 +329,25 @@ function Log({ log, isModalOpen, setIsModalOpen }) {
     setOpenLog(false);
   };
 
+  // Convert utc to locale
+  const utcDatePlan = new Date(log.plannedDateTime);
+  const localDatePlan = new Date(
+    utcDatePlan.getTime() + utcDatePlan.getTimezoneOffset() * 60000
+  );
+  const utcDateTaken = new Date(log.takenDateTime);
+  console.log(utcDateTaken);
+  const localDateTaken = new Date(
+    utcDateTaken.getTime() + utcDateTaken.getTimezoneOffset() * 60000
+  );
+
   const takenTime = log.takenDateTime;
-  const date = new Date(log.plannedDateTime).toDateString();
-  const time = new Date(log.plannedDateTime).toTimeString();
-  const dateTaken = new Date(log.takenDateTime).toDateString();
-  const hoursPlan = new Date(log.plannedDateTime).getHours();
-  const hoursTaken = new Date(log.takenDateTime).getHours();
+  const date = new Date(localDatePlan).toDateString();
+  const time = new Date(localDatePlan).toTimeString();
+  const dateTaken = new Date(localDateTaken).toDateString();
+  const hoursPlan = new Date(localDatePlan).getHours();
+  const hoursTaken = new Date(localDateTaken).getHours();
   const minutesPlan = time.split(":")[1];
-  const minutestaken = new Date(log.takenDateTime).toTimeString().split(":")[1];
+  const minutestaken = new Date(localDateTaken).toTimeString().split(":")[1];
   const ampmPlan = hoursPlan < 12 ? "am" : "pm";
   const ampmTaken = hoursTaken < 12 ? "am" : "pm";
   const frequencyDay = log.drugId.takein.frequencyDay;
@@ -350,7 +361,7 @@ function Log({ log, isModalOpen, setIsModalOpen }) {
       >
         <div className="drug-details">
           {takenTime?.split("-")[0] === "1970" ? (
-            <p className="text-[11px] text-primary-700 font-medium">skipped</p>
+            <p className="text-[11px] text-gray-400 font-medium">skipped</p>
           ) : takenTime ? (
             <p className="text-[11px] text-primary-700 font-medium">
               Taken at {hoursTaken} : {minutestaken} {ampmTaken},
@@ -642,7 +653,11 @@ function TakeLog({
             <ul className="flex flex-col mt-6 gap-y-2.5">
               <button
                 className="text-[16.88px] text-primary-700 font-semibold h-[52px] w-full border-2 border-gray-400 rounded-md	"
-                onClick={() => handleSubmitTakenTime(new Date())}
+                onClick={() =>
+                  handleSubmitTakenTime(
+                    new Date().getTime() - 7 * 60 * 60 * 1000
+                  )
+                }
               >
                 Now
               </button>
