@@ -451,22 +451,30 @@ function LogDetails({
   const handleReschedule = (date) => {
     console.log(date, log._id);
     // Modify log
-    // axios
-    //   .patch(`https://server.pillbook-hy.com/logs/${log._id}`, {
-    //     plannedDateTime: date,
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //   });
-    // Modify schedule
-    const logId = log._id;
-    console.log(logId);
-
     axios
-      .get(`https://server.pillbook-hy.com/schedules/${logId}`)
-      .then((res) => console.log(res));
-    // If exist, modify the one
-    // If not exist, create new one
+      .patch(`https://server.pillbook-hy.com/logs/${log._id}`, {
+        plannedDateTime: date,
+      })
+      .then((res) => {
+        console.log(res);
+      });
+
+    // Modify schedule
+    axios
+      .get(`https://server.pillbook-hy.com/schedules/${log._id}`)
+      .then((res) => {
+        // If schedule exists, modify the one
+        axios.patch(`https://server.pillbook-hy.com/schedules/${log._id}`, {
+          expireAt: date,
+        });
+      })
+      .catch((err) => {
+        // If schedule does not exist, create new one
+        axios.post(`https://server.pillbook-hy.com/schedules`, {
+          _id: log._id,
+          expireAt: date,
+        });
+      });
 
     // initialize the window
     setOpenLog(false);
