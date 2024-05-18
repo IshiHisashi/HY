@@ -335,7 +335,6 @@ function Log({ log, isModalOpen, setIsModalOpen }) {
     utcDatePlan.getTime() + utcDatePlan.getTimezoneOffset() * 60000
   );
   const utcDateTaken = new Date(log.takenDateTime);
-  console.log(utcDateTaken);
   const localDateTaken = new Date(
     utcDateTaken.getTime() + utcDateTaken.getTimezoneOffset() * 60000
   );
@@ -443,11 +442,36 @@ function LogDetails({
   setIsModalOpen,
   setOpenLog,
 }) {
+  const [reschedule, setReschedule] = useState(false);
   const [take, setTake] = useState("");
   const [setTime, setSetTime] = useState("");
-
   // modal control
   const [isLogDetailsModalOpen, setIsLogDetailsModalOpen] = useState(false);
+
+  const handleReschedule = (date) => {
+    console.log(date, log._id);
+    // Modify log
+    // axios
+    //   .patch(`https://server.pillbook-hy.com/logs/${log._id}`, {
+    //     plannedDateTime: date,
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //   });
+    // Modify schedule
+    const logId = log._id;
+    console.log(logId);
+
+    axios
+      .get(`https://server.pillbook-hy.com/schedules/${logId}`)
+      .then((res) => console.log(res));
+    // If exist, modify the one
+    // If not exist, create new one
+
+    // initialize the window
+    setOpenLog(false);
+    setIsModalOpen(false);
+  };
 
   const handleClickTake = () => {
     setIsLogDetailsModalOpen(() => !isLogDetailsModalOpen);
@@ -544,23 +568,35 @@ function LogDetails({
             </p>
           </div>
         </div>
-        <div className="btn-wrapper mx-4 mt-6 flex flex-col gap-2">
-          <button
-            className="w-full text-white font-bold text-[15px] bg-primary-700 rounded-[24px] h-[48px]"
-            onClick={handleClickTake}
-          >
-            Take
-          </button>
-          <button className="w-full text-primary-700 border-2 border-primary-700 font-bold text-[15px] rounded-[24px] h-[48px]">
-            Reschedule
-          </button>
-          <button
-            className="w-full text-[15px] h-[48px] pb-4"
-            onClick={() => handleSubmitTakenTime(new Date(0))}
-          >
-            Skip
-          </button>
-        </div>
+        {reschedule ? (
+          <>
+            <Reschedule
+              setReschedule={setReschedule}
+              handleReschedule={handleReschedule}
+            />
+          </>
+        ) : (
+          <div className="btn-wrapper mx-4 mt-6 flex flex-col gap-2">
+            <button
+              className="w-full text-white font-bold text-[15px] bg-primary-700 rounded-[24px] h-[48px]"
+              onClick={handleClickTake}
+            >
+              Take
+            </button>
+            <button
+              className="w-full text-primary-700 border-2 border-primary-700 font-bold text-[15px] rounded-[24px] h-[48px]"
+              onClick={() => setReschedule(true)}
+            >
+              Reschedule
+            </button>
+            <button
+              className="w-full text-[15px] h-[48px] pb-4"
+              onClick={() => handleSubmitTakenTime(new Date(0))}
+            >
+              Skip
+            </button>
+          </div>
+        )}
       </div>
       {isLogDetailsModalOpen ? (
         <div
@@ -577,8 +613,6 @@ function LogDetails({
           setTime={setTime}
           setSetTime={setSetTime}
           handleClickTake={handleClickTake}
-          isLogDetailsModalOpen={isLogDetailsModalOpen}
-          setIsLogDetailsModalOpen={setIsLogDetailsModalOpen}
           setIsModalOpen={setIsModalOpen}
           setOpenLog={setOpenLog}
           handleSubmitTakenTime={handleSubmitTakenTime}
@@ -596,8 +630,6 @@ function TakeLog({
   setTime,
   setSetTime,
   handleClickTake,
-  isLogDetailsModalOpen,
-  setIsLogDetailsModalOpen,
   setIsModalOpen,
   setOpenLog,
   handleSubmitTakenTime,
@@ -641,11 +673,8 @@ function TakeLog({
           </h4>
           {setTime ? (
             <SetTimeLog
-              log={log}
               setSetTime={setSetTime}
               setTake={setTake}
-              setIsModalOpen={setIsModalOpen}
-              setOpenLog={setOpenLog}
               handleSubmitTakenTime={handleSubmitTakenTime}
               UpdateRemining={UpdateRemining}
             />
@@ -686,18 +715,13 @@ function TakeLog({
 }
 
 function SetTimeLog({
-  log,
   setSetTime,
   setTake,
-  setIsModalOpen,
-  setOpenLog,
   handleSubmitTakenTime,
   UpdateRemining,
 }) {
   const [date, setDate] = useState("");
   const [hourmin, setHourmin] = useState("");
-  // const [actualTime, setActualTime] = useState("");
-
   const [hour, min] = hourmin?.split(":");
   const actualtimeH = new Date(date).setHours(
     new Date(date).getHours() + Number(hour)
@@ -744,6 +768,54 @@ function SetTimeLog({
         </a>
       </div>
     </div>
+  );
+}
+
+function Reschedule({ setReschedule, handleReschedule }) {
+  // set Time
+  const [date, setDate] = useState("");
+  const [hourmin, setHourmin] = useState("");
+  const [hour, min] = hourmin?.split(":");
+  const actualtimeH = new Date(date).setHours(
+    new Date(date).getHours() + Number(hour)
+  );
+  const actualtime = new Date(actualtimeH).setMinutes(Number(min));
+
+  return (
+    <>
+      <div className="py-6 px-4 flex flex-col gap-4">
+        <h2 className="font-medium text-[19px] text-center">
+          Reschedule time to take
+        </h2>
+        <div className="flex gap-4">
+          <input
+            type="date"
+            className="border-gray-400 border-2 px-4 py-2 mx-auto rounded-md w-full"
+            onChange={(e) => setDate(e.target.value)}
+          />
+          <input
+            type="text"
+            className="border-gray-400 border-2 px-4 py-2 mx-auto rounded-md w-full"
+            placeholder="e.g. 13:00"
+            onChange={(e) => setHourmin(e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-2 justify-center">
+          <button
+            className="w-full text-white font-bold text-[15px] bg-primary-700 rounded-[24px] h-[48px]"
+            onClick={() => handleReschedule(new Date(actualtime))}
+          >
+            Submit
+          </button>
+          <a
+            className="text-center cursor-pointer inline-block"
+            onClick={() => setReschedule(false)}
+          >
+            Close
+          </a>
+        </div>
+      </div>
+    </>
   );
 }
 
