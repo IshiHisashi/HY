@@ -73,7 +73,7 @@
 
 ## Development architecture
 <p>This application is nicely developed with MERN stack and deployed by Vercel. UI is formed by Tailwind, notification is send via Firebase Cloud Messaging and JWT helps user authentication. Drug data is from public API data provided by government of Canada (<a href='https://health-products.canada.ca/api/documentation/dpd-documentation-en.html#a1'>URL</a>)</p>
-<p> 
+<p align='center'> 
 <img src='https://github.com/IshiHisashi/hy/blob/main/frontend/public/images/system_architecture_pillbook.jpg' alt='developmet stack' width='600' margin='0 auto'/>
 <!--  <img style="margin-right: 300;" src="https://github.com/tandpfun/skill-icons/blob/main/icons/HTML.svg" alt="html" width="40" height="40"/>
   <img src="https://github.com/tandpfun/skill-icons/blob/main/icons/CSS.svg" alt="css" width="40" height="40"/>
