@@ -10,14 +10,14 @@ const router = express.Router({ mergeParams: true });
 router.use("/:drugId/logs", logRoute);
 
 router.post("/", drugController.createDrug);
-router.get("/", authController.protect, drugController.readDrugs);
+router.get("/", drugController.readDrugs);
 router.get(
   "/shortage",
-  // authController.protect,
+  //
   drugController.readShortageDrugs
 );
-router.get("/:id", authController.protect, drugController.readDrug);
-router.patch("/:id", authController.protect, drugController.updateDrug);
-router.delete("/:id", authController.protect, drugController.deleteDrug);
+router.get("/:id", drugController.readDrug);
+router.patch("/:id", drugController.updateDrug);
+router.delete("/:id", drugController.deleteDrug);
 
 export default router;

@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PdfCard from "../PdfCard.js";
 import { useAuthContext } from "../authContext.js";
 import AddDrug from "./AddDrug.jsx";
@@ -12,15 +12,19 @@ function ViewDrug() {
   const userId = userIdObj.userId;
   const [drugs, setDrugs] = useState([]);
   const [isAddMedicationOpen, setIsAddMedicationOpen] = useState(false);
+
   // Read Drug Data
   useEffect(() => {
+    console.log("function is called");
     if (userId && userId !== "logout")
       axios
         .get(`https://server.pillbook-hy.com/users/${userId}/drugs`)
         .then((res) => {
           setDrugs(res.data.data.drugs);
         });
-  }, [userId]);
+  }, [userId, isAddMedicationOpen]);
+
+  console.log(drugs);
 
   const handleShowAddMedication = () => {
     setIsAddMedicationOpen(true);
@@ -127,7 +131,6 @@ function Drug({ drug }) {
         className="bg-white mx-4 rounded p-4"
         onClick={() => handleClick(drug)}
       >
-        {/* <Navigate to={`/drugs/edit/${drug._id}`} /> */}
         <h3 className="text-gray-950 text-[19.98px] font-bold">
           {drug.nickname ? drug.nickname : drug.drugName}
         </h3>
