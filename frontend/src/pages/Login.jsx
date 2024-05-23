@@ -6,6 +6,7 @@ import { useAuthContext } from "../authContext.js";
 import SignUp from "./SignUp.jsx";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [em, setEm] = useState("");
   const [pw, setPw] = useState("");
   const [signup, setSignup] = useState(false);

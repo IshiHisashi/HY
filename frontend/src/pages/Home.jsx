@@ -17,6 +17,8 @@ function Home() {
   const [shortageDrugs, setShortageDrugs] = useState([]);
   const [isOpenShortageDrugs, setIsOpenShortageDrugs] = useState(false);
   const [isAddMedicationOpen, setIsAddMedicationOpen] = useState(false);
+  const [openLog, setOpenLog] = useState("");
+  const [logTaken, setLogTaken] = useState(false);
 
   const today = new Date(new Date().setHours(0, 0, 0, 0));
   const daysDifference =
@@ -83,6 +85,8 @@ function Home() {
       }
     });
     setLogsDate(logDateArr);
+    console.log("log updated");
+    console.log(logTaken);
   };
 
   // Read Drug Data
@@ -109,7 +113,8 @@ function Home() {
         .then((logs) => {
           LogsForDate(new Date(), logs);
         });
-  }, [userId]);
+    // Dependency to adding medication & updating log
+  }, [userId, isAddMedicationOpen, logTaken]);
 
   // Click a date card
   const handleClickDate = (date) => {
@@ -275,6 +280,10 @@ function Home() {
               key={log._id}
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
+              openLog={openLog}
+              setOpenLog={setOpenLog}
+              logTaken={logTaken}
+              setLogTaken={setLogTaken}
             />
           ))}
         </ul>
@@ -309,8 +318,16 @@ function Home() {
 
 export default Home;
 
-function Log({ log, isModalOpen, setIsModalOpen }) {
-  const [openLog, setOpenLog] = useState("");
+function Log({
+  log,
+  isModalOpen,
+  setIsModalOpen,
+  openLog,
+  setOpenLog,
+  logTaken,
+  setLogTaken,
+}) {
+  // const [openLog, setOpenLog] = useState("");
   // Click a log card
   const handleClickLog = () => {
     if (!takenTime) {
@@ -419,6 +436,8 @@ function Log({ log, isModalOpen, setIsModalOpen }) {
               frequencyWithinADay={frequencyWithinADay}
               setIsModalOpen={setIsModalOpen}
               setOpenLog={setOpenLog}
+              logTaken={logTaken}
+              setLogTaken={setLogTaken}
             />
           ) : (
             ""
@@ -441,6 +460,8 @@ function LogDetails({
   frequencyWithinADay,
   setIsModalOpen,
   setOpenLog,
+  logTaken,
+  setLogTaken,
 }) {
   const [reschedule, setReschedule] = useState(false);
   const [take, setTake] = useState("");
@@ -497,6 +518,7 @@ function LogDetails({
         takenDateTime: time,
       })
       .then(() => {
+        setLogTaken(!logTaken);
         axios
           .get(
             `https://server.pillbook-hy.com/drugs/${log.drugId._id}/logs/untaken`

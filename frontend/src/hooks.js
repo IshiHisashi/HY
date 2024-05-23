@@ -21,6 +21,7 @@ const useAuth = () => {
       await axios.post("https://server.pillbook-hy.com/users/login", data);
       await getUser();
       console.log("loggedin");
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
