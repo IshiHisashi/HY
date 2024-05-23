@@ -41,7 +41,10 @@
 </table>
 
 ### Video
-<p>Coming soon</p>
+### Video
+<p>(Please click below thumbnail then you'll be navigated to youtube link)</p>
+
+[![](http://img.youtube.com/vi/VBxXHbK2GbQ/0.jpg)](https://www.youtube.com/watch?v=VBxXHbK2GbQ)
 
 ## Directory Structure
 <table>
