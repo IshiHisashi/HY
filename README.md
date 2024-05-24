@@ -16,7 +16,7 @@
  <li>
 <strong>Medication History</strong>: Keep a record of your medication intake. View your history to track adherence and share with healthcare providers if needed.</li>
   <li>
-<strong>Dosage notifications</strong>: Set up reminders to take your medications at the right times. Receive push notifications to ensure you never forget a dose (this is currently Android users only).</li>
+<strong>Dosage notifications</strong>: Set up reminders to take your medications at the right times. Receive push notifications to ensure you never forget a dose (still under construction for iOS).</li>
 </ul>
 
 ## Demo
