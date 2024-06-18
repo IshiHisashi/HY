@@ -366,8 +366,8 @@ function Log({
   const minutestaken = new Date(localDateTaken).toTimeString().split(":")[1];
   const ampmPlan = hoursPlan < 12 ? "am" : "pm";
   const ampmTaken = hoursTaken < 12 ? "am" : "pm";
-  const frequencyDay = log.drugId.takein.frequencyDay;
-  const frequencyWithinADay = log.drugId.takein.frequencyWithinADay;
+  const frequencyDay = log.drugId?.takein.frequencyDay;
+  const frequencyWithinADay = log.drugId?.takein.frequencyWithinADay;
 
   return (
     <>
@@ -390,11 +390,11 @@ function Log({
           )}
 
           <h4 className="text-[18.98px] text-gray-950 font-semibold">
-            {log.drugId.drugName}
+            {log.drugId?.drugName}
           </h4>
           {/* frequency */}
           <p className="text-[11px] text-gray-500 font-medium">
-            {log.drugId.amount} {log.drugId.unit} /{" "}
+            {log.drugId?.amount} {log.drugId?.unit} /{" "}
             {frequencyDay === 1
               ? "once"
               : frequencyDay === 2

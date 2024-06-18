@@ -11,7 +11,7 @@ const drugSchema = mongoose.Schema({
     required: [true, "Please specify drug name"],
   },
   nickname: {
-    rype: String,
+    type: String,
   },
   companyName: {
     type: String,

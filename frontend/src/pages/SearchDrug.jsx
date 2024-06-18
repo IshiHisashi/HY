@@ -1,17 +1,16 @@
-import React from "react";
+import React, { useReducer } from "react";
 
 const SearchDrug = ({
+  handleListClick,
   drug,
-  setDrugName,
   setSearchedDrugId,
   searchedDrugId,
-  setCompanyName,
   isNameSearchOpen,
   setIsNameSearchOpen,
 }) => {
   const handleSelect = () => {
-    setDrugName(drug.brand_name);
-    setCompanyName(drug.company_name);
+    handleListClick("drugName", drug.brand_name);
+    handleListClick("companyName", drug.company_name);
     setSearchedDrugId(drug.drug_code);
     setIsNameSearchOpen(false);
   };
